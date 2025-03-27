@@ -46,7 +46,7 @@ const TeaRoundPicker = () => {
 
   return (
     <div className="container mt-5">
-      <h1 className="mb-4">Nisien Tea Round Picker</h1>
+      <h1 className="mb-4">Tea Round Picker</h1>
       
       <TeamSelector onTeamSelect={handleTeamSelect} />
       

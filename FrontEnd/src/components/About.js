@@ -8,10 +8,9 @@ const About = () => {
         <Col>
           <Card>
             <Card.Body>
-              <Card.Title className="text-center">About Us</Card.Title>
+              <Card.Title className="text-center">About</Card.Title>
               <Card.Text>
-                We are a passionate team dedicated to creating amazing web experiences.
-                Our mission is to build innovative solutions that make a difference.
+                TODO: link github
               </Card.Text>
             </Card.Body>
           </Card>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Wheel } from 'react-custom-roulette';
-import oilcanSvg from '../images/oil-can.svg';
+import oilcanSvg from '../../images/oil-can.svg';
 import { Modal, Button, Alert } from 'react-bootstrap';
 
 const TeaWheel = ({ participants, showModal, onClose }) => {

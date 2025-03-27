@@ -5,10 +5,8 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 // Import components
 import Navbar from './components/Navbar';
-import Home from './components/Home';
 import About from './components/About';
-import Contact from './components/Contact';
-import TeaRoundPicker from './components/TeaRoundPicker';
+import TeaRoundPicker from './components/TeaRoundPicker/TeaRoundPicker';
 
 const App = () => {
   return (
@@ -16,10 +14,8 @@ const App = () => {
       <div>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<TeaRoundPicker />} />
           <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/tea-round" element={<TeaRoundPicker />} />
         </Routes>
       </div>
     </Router>
