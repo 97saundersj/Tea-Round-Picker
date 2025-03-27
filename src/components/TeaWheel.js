@@ -13,7 +13,7 @@ const TeaWheel = ({ participants, showModal, onClose }) => {
       setPrizeNumber(randomIndex);
       setIsSpinning(true);
     }
-  }, [showModal]);
+  }, [showModal, participants.length]);
 
   if (!participants || participants.length === 0) {
     return <p>No participants available.</p>;

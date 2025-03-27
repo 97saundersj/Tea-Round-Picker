@@ -5,9 +5,9 @@ import TeamSelector from './TeamSelector';
 const TeaRoundPicker = () => {
   const [participants, setParticipants] = useState([]);
   const [newParticipant, setNewParticipant] = useState('');
-  const [selectedTeaMaker, setSelectedTeaMaker] = useState(null);
+  const [selectedTeaMaker] = useState(null);
   const [isSpinning, setIsSpinning] = useState(false);
-  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [setSelectedTeam] = useState(null);
 
   const handleTeamSelect = (team) => {
     setSelectedTeam(team);
@@ -35,10 +35,12 @@ const TeaRoundPicker = () => {
     setIsSpinning(true);
   };
 
+  /*
   const handleSpinComplete = (winner) => {
     setIsSpinning(false);
     setSelectedTeaMaker(winner);
   };
+  */
 
   const handleCloseTeaWheel = (isClosed) => {
     setIsSpinning(false);
