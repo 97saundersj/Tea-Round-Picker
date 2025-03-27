@@ -7,10 +7,8 @@ const TeaRoundPicker = () => {
   const [newParticipant, setNewParticipant] = useState('');
   const [selectedTeaMaker] = useState(null);
   const [isSpinning, setIsSpinning] = useState(false);
-  const [setSelectedTeam] = useState(null);
 
   const handleTeamSelect = (team) => {
-    setSelectedTeam(team);
     setParticipants(team ? team.participants : []); // Set participants based on selected team
   };
 
