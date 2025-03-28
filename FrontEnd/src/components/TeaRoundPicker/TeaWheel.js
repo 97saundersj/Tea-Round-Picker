@@ -1,88 +1,116 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import { Wheel } from 'react-custom-roulette';
-import oilcanSvg from '../../images/oil-can.svg';
 import { Modal, Button, Alert } from 'react-bootstrap';
+import oilcanSvg from '../../images/oil-can.svg';
 
-const TeaWheel = ({ participants, showModal, onClose }) => {
+const TeaWheel = ({ participants, teamId, showModal, onClose, pickedTeaMaker }) => {
   const [isSpinning, setIsSpinning] = useState(false);
-  const [prizeNumber, setPrizeNumber] = useState(null);
+  const [selectedParticipant, setSelectedParticipant] = useState(null);
+  const [modalVisible, setModalVisible] = useState(showModal);
 
-  useEffect(() => {
-    if (showModal) {
-      const randomIndex = Math.floor(Math.random() * participants.length);
-      setPrizeNumber(randomIndex);
+  const fetchRandomParticipant = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/random-participant`);
+      const participant = response.data;
+      setSelectedParticipant(participant);
       setIsSpinning(true);
+      setModalVisible(true);
+    } catch (error) {
+      console.error("Error fetching random participant:", error);
     }
-  }, [showModal, participants.length]);
-
-  if (!participants || participants.length === 0) {
-    return <p>No participants available.</p>;
-  }
+  };
 
   const data = participants.map((participant) => ({ option: participant }));
 
   const handleSpinEnd = () => {
     setIsSpinning(false);
+    if (pickedTeaMaker) {
+      pickedTeaMaker();
+    }
   };
 
+  const handleClose = () => {
+    setModalVisible(false);
+  };
+
+  if (!teamId) {
+    return null; // Do not render the component if teamId is not defined
+  }
+
   return (
-    <Modal show={showModal} onHide={onClose} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Tea Wheel</Modal.Title>
-      </Modal.Header>
+    <div className="card m-2">
+      <div className="card-body">
+        <h5 className="card-title">Pick Tea Maker</h5>
+        <button
+          className="btn btn-success btn-lg w-100 mb-3"
+          onClick={() => {
+            fetchRandomParticipant();
+          }}
+          disabled={isSpinning || participants.length === 0}
+        >
+          Pick Tea Maker
+        </button>
+      </div>
+    
+      <Modal show={modalVisible} onHide={handleClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Tea Wheel</Modal.Title>
+        </Modal.Header>
 
-      <Modal.Body className="text-center">
-        <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0', position: 'relative' }}>
-          <Wheel
-            mustStartSpinning={isSpinning}
-            prizeNumber={prizeNumber !== null ? prizeNumber : 0}
-            data={data}
-            onStopSpinning={handleSpinEnd}
-            spinDuration={0.3}
-            backgroundColors={['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#D4A5A5', '#9B59B6', '#3498DB']}
-            textColors={['#FFFFFF']}
-            outerBorderColor="#EEEEEE"
-            outerBorderWidth={3}
-            innerRadius={0}
-            innerBorderColor="#FFFFFF"
-            innerBorderWidth={2}
-            radiusLineColor="#FFFFFF"
-            radiusLineWidth={2}
-            perpendicularText={true}
-            textDistance={85}
-            pointerProps={{
-              src: oilcanSvg,
-              style: {
-                transform: 'scaleX(-1) rotate(45deg)',
-                filter: 'drop-shadow(2px 2px 2px rgba(0,0,0,0.3))',
-                transition: 'transform 0.2s ease-in-out',
-              },
-            }}
-          />
-        </div>
+        <Modal.Body className="text-center">
+          <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0', position: 'relative' }}>
+            <Wheel
+              mustStartSpinning={isSpinning}
+              prizeNumber={0}
+              data={data}
+              onStopSpinning={handleSpinEnd}
+              spinDuration={0.3}
+              backgroundColors={['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#D4A5A5', '#9B59B6', '#3498DB']}
+              textColors={['#FFFFFF']}
+              outerBorderColor="#EEEEEE"
+              outerBorderWidth={3}
+              innerRadius={0}
+              innerBorderColor="#FFFFFF"
+              innerBorderWidth={2}
+              radiusLineColor="#FFFFFF"
+              radiusLineWidth={2}
+              perpendicularText={true}
+              textDistance={85}
+              pointerProps={{
+                src: oilcanSvg,
+                style: {
+                  transform: 'scaleX(-1) rotate(45deg)',
+                  filter: 'drop-shadow(2px 2px 2px rgba(0,0,0,0.3))',
+                  transition: 'transform 0.2s ease-in-out',
+                },
+              }}
+            />
+          </div>
 
-        {prizeNumber !== null && !isSpinning && (
-          <Alert variant="success" className="text-center mt-3">
-            🎉 {participants[prizeNumber]} will make the tea! 🎉
-          </Alert>
-        )}
-
-        <Modal.Footer>
-          {prizeNumber !== null && !isSpinning && (
-            <Button 
-              variant="primary" 
-              onClick={() => {
-                const randomIndex = Math.floor(Math.random() * participants.length);
-                setPrizeNumber(randomIndex);
-                setIsSpinning(true);
-              }} 
-            >
-              Spin Again?
-            </Button>
+          {selectedParticipant && !isSpinning && (
+            <Alert variant="success" className="text-center mt-3">
+              🎉 {selectedParticipant} will make the tea! 🎉
+            </Alert>
           )}
-        </Modal.Footer>
-      </Modal.Body>
-    </Modal>
+
+          <Modal.Footer>
+            {selectedParticipant && !isSpinning && (
+              <Button 
+                variant="primary" 
+                onClick={() => {
+                  const randomIndex = Math.floor(Math.random() * participants.length);
+                  setSelectedParticipant(participants[randomIndex]);
+                  setIsSpinning(true);
+                }} 
+              >
+                Spin Again?
+              </Button>
+            )}
+          </Modal.Footer>
+        </Modal.Body>
+      </Modal>
+    </div>
   );
 };
 
