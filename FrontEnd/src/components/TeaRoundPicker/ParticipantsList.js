@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios'; // Import Axios
+import ParticipantItem from './ParticipantItem';
 
 const ParticipantsList = ({ participants, setParticipants, teamId, onParticipantAdded }) => {
   const [newParticipant, setNewParticipant] = useState('');
@@ -50,6 +51,29 @@ const ParticipantsList = ({ participants, setParticipants, teamId, onParticipant
     }
   };
 
+  const handlePreferredTeaChange = async (index, newTea) => {
+    try {
+      const response = await axios.put(`${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/participants/${participants[index].name}`, {
+        preferredTea: newTea
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status !== 204) {
+        throw new Error('Failed to update preferred tea');
+      }
+
+      setParticipants(participants.map((participant, i) =>
+        i === index ? { ...participant, preferredTea: newTea } : participant
+      ));
+    } catch (error) {
+      console.error("Error updating preferred tea:", error);
+      setErrorMessage('Error updating preferred tea. Please try again.');
+    }
+  };
+
   if (!teamId) {
     return null; // Do not render the component if teamId is not defined
   }
@@ -74,15 +98,13 @@ const ParticipantsList = ({ participants, setParticipants, teamId, onParticipant
         <h6 className="card-subtitle mb-2">Current Participants:</h6>
         <ul className="list-group">
           {participants.map((participant, index) => (
-            <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-              {participant.name}
-              <button
-                className="btn btn-sm btn-danger"
-                onClick={() => handleRemoveParticipant(index)}
-              >
-                Remove
-              </button>
-            </li>
+            <ParticipantItem
+              key={index}
+              participant={participant}
+              index={index}
+              handlePreferredTeaChange={handlePreferredTeaChange}
+              handleRemoveParticipant={handleRemoveParticipant}
+            />
           ))}
         </ul>
       </div>
