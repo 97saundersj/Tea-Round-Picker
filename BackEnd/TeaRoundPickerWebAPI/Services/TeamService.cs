@@ -16,15 +16,19 @@ namespace TeaRoundPickerWebAPI.Services
 
         public async Task<IEnumerable<Team>> GetTeams()
         {
-            return await _context.Teams.ToListAsync();
+            return await _context.Teams
+                .Include(t => t.Participants)
+                .ToListAsync();
         }
 
-        public async Task<Team> GetTeam(string id)
+        public async Task<Team> GetTeam(int id)
         {
-            return await _context.Teams.FindAsync(id);
+            return await _context.Teams
+                .Include(t => t.Participants)
+                .FirstAsync(t => t.Id == id);
         }
 
-        public async Task UpdateTeam(string id, Team team)
+        public async Task UpdateTeam(int id, Team team)
         {
             if (id != team.Id)
             {
@@ -57,7 +61,7 @@ namespace TeaRoundPickerWebAPI.Services
                 throw new ArgumentException("Team name is required.");
             }
 
-            var team = new Team(Guid.NewGuid().ToString(), createTeamDto.Label, createTeamDto.Participants ?? new List<string>());
+            var team = new Team(0, createTeamDto.Label, []);
 
             _context.Teams.Add(team);
             try
@@ -79,7 +83,7 @@ namespace TeaRoundPickerWebAPI.Services
             return team;
         }
 
-        public async Task DeleteTeam(string id)
+        public async Task DeleteTeam(int id)
         {
             var team = await _context.Teams.FindAsync(id);
             if (team == null)
@@ -91,7 +95,7 @@ namespace TeaRoundPickerWebAPI.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddParticipant(string teamId, string participantName)
+        public async Task AddParticipant(int teamId, string participantName)
         {
             var team = await _context.Teams.FindAsync(teamId);
             if (team == null)
@@ -99,31 +103,34 @@ namespace TeaRoundPickerWebAPI.Services
                 throw new KeyNotFoundException("Team not found.");
             }
 
-            if (!team.Participants.Contains(participantName))
+            if (!team.Participants.Exists(p => p.Name == participantName))
             {
-                team.Participants.Add(participantName);
+                var newParticipant = new Participant(0, participantName, "");
+
+                team.Participants.Add(newParticipant);
                 await _context.SaveChangesAsync();
             }
         }
 
-        public async Task RemoveParticipant(string teamId, string participantName)
+        public async Task RemoveParticipant(int teamId, string participantName)
         {
-            var team = await _context.Teams.FindAsync(teamId);
+            var team = await GetTeam(teamId);
             if (team == null)
             {
                 throw new KeyNotFoundException("Team not found.");
             }
 
-            if (team.Participants.Contains(participantName))
+            var existingParticipent = team.Participants.FirstOrDefault(p => p.Name == participantName);
+            if (existingParticipent != null)
             {
-                team.Participants.Remove(participantName);
+                team.Participants.Remove(existingParticipent);
                 await _context.SaveChangesAsync();
             }
         }
 
-        public async Task<string> GetRandomParticipant(string teamId)
+        public async Task<string> GetRandomParticipant(int teamId)
         {
-            var team = await _context.Teams.FindAsync(teamId);
+            var team = await GetTeam(teamId);
             if (team == null || !team.Participants.Any())
             {
                 throw new KeyNotFoundException("Team not found or has no participants.");
@@ -131,25 +138,36 @@ namespace TeaRoundPickerWebAPI.Services
 
             var random = new Random();
             int index = random.Next(team.Participants.Count);
-            string selectedParticipant = team.Participants[index];
+            var selectedParticipant = team.Participants[index];
 
-            // Create a new TeamParticipantSelectionEntry for each selection
-            var selectionEntry = new TeamParticipantSelectionEntry(teamId, team.Participants, selectedParticipant);
+            // Create a new ParticipantSelectionLog for each selection
+            var participantSnapshots = team.Participants.Select(p => new ParticipantSnapshot
+            {
+                Name = p.Name,
+                PreferredTea = p.PreferredTea
+            }).ToList();
+
+            var selectionEntry = new TeamParticipantSelectionEntry(
+                teamId, 
+                participantSnapshots, // Use snapshots
+                selectedParticipant.Name
+            );
 
             _context.TeamParticipantSelectionEntries.Add(selectionEntry);
             await _context.SaveChangesAsync();
 
-            return selectedParticipant;
+            return selectedParticipant.Name;
         }
 
-        public async Task<IEnumerable<TeamParticipantSelectionEntry>> GetPreviousParticipantSelectionsForTeam(string teamId)
+        public async Task<IEnumerable<TeamParticipantSelectionEntry>> GetPreviousParticipantSelectionsForTeam(int teamId)
         {
             return await _context.TeamParticipantSelectionEntries
                 .Where(entry => entry.TeamId == teamId)
+                .Include(t => t.Participants)
                 .ToListAsync();
         }
 
-        private bool TeamExists(string id)
+        private bool TeamExists(int id)
         {
             return _context.Teams.Any(e => e.Id == id);
         }

@@ -7,20 +7,20 @@ namespace TeaRoundPickerWebAPI.Services
     {
         Task<IEnumerable<Team>> GetTeams();
 
-        Task<Team> GetTeam(string id);
+        Task<Team> GetTeam(int id);
 
-        Task UpdateTeam(string id, Team team);
+        Task UpdateTeam(int id, Team team);
 
         Task<Team> CreateTeam(CreateTeamDto createTeamDto);
 
-        Task DeleteTeam(string id);
+        Task DeleteTeam(int id);
 
-        Task AddParticipant(string teamId, string participantName);
+        Task AddParticipant(int teamId, string participantName);
 
-        Task RemoveParticipant(string teamId, string participantName);
+        Task RemoveParticipant(int teamId, string participantName);
 
-        Task<string> GetRandomParticipant(string teamId);
+        Task<string> GetRandomParticipant(int teamId);
 
-        Task<IEnumerable<TeamParticipantSelectionEntry>> GetPreviousParticipantSelectionsForTeam(string teamId);
+        Task<IEnumerable<TeamParticipantSelectionEntry>> GetPreviousParticipantSelectionsForTeam(int teamId);
     }
 } 

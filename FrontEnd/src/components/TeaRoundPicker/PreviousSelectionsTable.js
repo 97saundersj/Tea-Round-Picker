@@ -31,14 +31,14 @@ const PreviousSelectionsTable = ({ teamId, refresh }) => {
               <tr>
                 <th>Date</th>
                 <th>Participants</th>
-                <th>Chrosen Participant</th>
+                <th>Chosen Participant</th>
               </tr>
             </thead>
             <tbody>
               {selections.map((selection) => (
                 <tr key={selection.id}>
                   <td>{new Date(selection.date).toLocaleString()}</td>
-                  <td>{selection.participants.join(', ')}</td>
+                  <td>{selection.participants.map((participant) => (participant.name)).join(', ')}</td>
                   <td>{selection.chosenParticipant}</td>
                 </tr>
               ))}

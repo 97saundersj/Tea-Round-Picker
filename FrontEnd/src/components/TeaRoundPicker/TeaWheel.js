@@ -8,12 +8,21 @@ const TeaWheel = ({ participants, teamId, showModal, onClose, pickedTeaMaker }) 
   const [isSpinning, setIsSpinning] = useState(false);
   const [selectedParticipant, setSelectedParticipant] = useState(null);
   const [modalVisible, setModalVisible] = useState(showModal);
+  const [prizeNumber, setPrizeNumber] = useState(0);
 
   const fetchRandomParticipant = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/random-participant`);
       const participant = response.data;
+      
       setSelectedParticipant(participant);
+      
+      // Find the index of the selected participant in the participants list
+      const index = participants.findIndex(p => p.name === participant.name);
+      if (index !== -1) {
+        setPrizeNumber(index);
+      }
+      
       setIsSpinning(true);
       setModalVisible(true);
     } catch (error) {
@@ -21,7 +30,7 @@ const TeaWheel = ({ participants, teamId, showModal, onClose, pickedTeaMaker }) 
     }
   };
 
-  const data = participants.map((participant) => ({ option: participant }));
+  const data = participants.map((participant) => ({ option: participant.name }));
 
   const handleSpinEnd = () => {
     setIsSpinning(false);
@@ -44,9 +53,7 @@ const TeaWheel = ({ participants, teamId, showModal, onClose, pickedTeaMaker }) 
         <h5 className="card-title">Pick Tea Maker</h5>
         <button
           className="btn btn-success btn-lg w-100 mb-3"
-          onClick={() => {
-            fetchRandomParticipant();
-          }}
+          onClick={fetchRandomParticipant}
           disabled={isSpinning || participants.length === 0}
         >
           Pick Tea Maker
@@ -62,7 +69,7 @@ const TeaWheel = ({ participants, teamId, showModal, onClose, pickedTeaMaker }) 
           <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0', position: 'relative' }}>
             <Wheel
               mustStartSpinning={isSpinning}
-              prizeNumber={0}
+              prizeNumber={prizeNumber}
               data={data}
               onStopSpinning={handleSpinEnd}
               spinDuration={0.3}
@@ -98,9 +105,7 @@ const TeaWheel = ({ participants, teamId, showModal, onClose, pickedTeaMaker }) 
             {selectedParticipant && !isSpinning && (
               <Button 
                 variant="primary" 
-                onClick={() => {
-                  fetchRandomParticipant();
-                }} 
+                onClick={fetchRandomParticipant}
               >
                 Spin Again?
               </Button>
