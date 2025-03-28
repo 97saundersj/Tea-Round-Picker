@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios'; // Import Axios
+import ParticipantItem from './ParticipantItem';
 
-const ParticipantsList = ({ participants, setParticipants, teamId }) => {
+const ParticipantsList = ({ participants, setParticipants, teamId, onParticipantAdded }) => {
   const [newParticipant, setNewParticipant] = useState('');
   const [errorMessage, setErrorMessage] = useState(''); // State for error messages
 
@@ -13,7 +14,7 @@ const ParticipantsList = ({ participants, setParticipants, teamId }) => {
         },
       });
 
-      if (response.status !== 200) {
+      if (response.status !== 204) {
         throw new Error('Failed to add participant');
       }
     } catch (error) {
@@ -30,11 +31,12 @@ const ParticipantsList = ({ participants, setParticipants, teamId }) => {
       setParticipants([...participants, trimmedName]);
       setNewParticipant('');
       setErrorMessage(''); // Clear error message on successful addition
+      onParticipantAdded();
     }
   };
 
   const handleRemoveParticipant = async (index) => {
-    const participantToRemove = participants[index];
+    const participantToRemove = participants[index].name;
     try {
       const response = await axios.delete(`${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/participants/${participantToRemove}`);
 
@@ -46,6 +48,29 @@ const ParticipantsList = ({ participants, setParticipants, teamId }) => {
     } catch (error) {
       console.error("Error removing participant:", error.response ? error.response.data : error.message); // Log detailed error response
       setErrorMessage('Error removing participant. Please try again.'); // Set error message
+    }
+  };
+
+  const handlePreferredTeaChange = async (index, newTea) => {
+    try {
+      const response = await axios.put(`${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/participants/${participants[index].name}`, {
+        preferredTea: newTea
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status !== 204) {
+        throw new Error('Failed to update preferred tea');
+      }
+
+      setParticipants(participants.map((participant, i) =>
+        i === index ? { ...participant, preferredTea: newTea } : participant
+      ));
+    } catch (error) {
+      console.error("Error updating preferred tea:", error);
+      setErrorMessage('Error updating preferred tea. Please try again.');
     }
   };
 
@@ -73,15 +98,13 @@ const ParticipantsList = ({ participants, setParticipants, teamId }) => {
         <h6 className="card-subtitle mb-2">Current Participants:</h6>
         <ul className="list-group">
           {participants.map((participant, index) => (
-            <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-              {participant}
-              <button
-                className="btn btn-sm btn-danger"
-                onClick={() => handleRemoveParticipant(index)}
-              >
-                Remove
-              </button>
-            </li>
+            <ParticipantItem
+              key={index}
+              participant={participant}
+              index={index}
+              handlePreferredTeaChange={handlePreferredTeaChange}
+              handleRemoveParticipant={handleRemoveParticipant}
+            />
           ))}
         </ul>
       </div>

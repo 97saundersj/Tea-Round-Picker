@@ -51,13 +51,19 @@ const TeaRoundPicker = () => {
     setRefetchPreviousSelections(prev => !prev);
   };
 
+  const refetchTeam = () => {
+    if (selectedTeamId) {
+      fetchTeamById(selectedTeamId);
+    }
+  };
+
   return (
     <div className="container mt-5">
       <h1 className="mb-4">Tea Round Picker</h1>
       
       <TeamSelector onTeamSelect={handleTeamSelect} teams={teams} setTeams={setTeams} fetchTeams={fetchTeams} />
       
-      <ParticipantsList participants={participants} setParticipants={setParticipants} teamId={selectedTeamId} />
+      <ParticipantsList participants={participants} setParticipants={setParticipants} teamId={selectedTeamId} onParticipantAdded={refetchTeam} />
       
       <TeaWheel
         participants={participants}

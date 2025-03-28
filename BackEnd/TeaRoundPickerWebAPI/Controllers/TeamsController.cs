@@ -20,7 +20,7 @@ namespace TeaRoundPickerWebAPI.Controllers
 
         // GET: api/Teams/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Team>> GetTeam(string id)
+        public async Task<ActionResult<Team>> GetTeam(int id)
         {
             var team = await _teamService.GetTeam(id);
             if (team == null)
@@ -32,7 +32,7 @@ namespace TeaRoundPickerWebAPI.Controllers
 
         // PUT: api/Teams/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTeam(string id, Team team)
+        public async Task<IActionResult> PutTeam(int id, Team team)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace TeaRoundPickerWebAPI.Controllers
 
         // DELETE: api/Teams/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTeam(string id)
+        public async Task<IActionResult> DeleteTeam(int id)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace TeaRoundPickerWebAPI.Controllers
 
         // POST: api/Teams/{id}/participants
         [HttpPost("{id}/participants")]
-        public async Task<IActionResult> AddParticipant(string id, [FromBody] string participantName)
+        public async Task<IActionResult> AddParticipant(int id, [FromBody] string participantName)
         {
             try
             {
@@ -98,13 +98,13 @@ namespace TeaRoundPickerWebAPI.Controllers
             }
         }
 
-        // DELETE: api/Teams/{id}/participants/{participantName}
-        [HttpDelete("{id}/participants/{participantName}")]
-        public async Task<IActionResult> RemoveParticipant(string id, string participantName)
+        // DELETE: api/Teams/{teamId}/participants/{participantName}
+        [HttpDelete("{teamId}/participants/{participantName}")]
+        public async Task<IActionResult> RemoveParticipant(int teamId, string participantName)
         {
             try
             {
-                await _teamService.RemoveParticipant(id, participantName);
+                await _teamService.RemoveParticipant(teamId, participantName);
                 return NoContent();
             }
             catch (KeyNotFoundException)
@@ -113,13 +113,13 @@ namespace TeaRoundPickerWebAPI.Controllers
             }
         }
 
-        // GET: api/Teams/{id}/random-participant
-        [HttpGet("{id}/random-participant")]
-        public async Task<ActionResult<string>> GetRandomParticipant(string id)
+        // GET: api/Teams/{teamId}/random-participant
+        [HttpGet("{teamId}/random-participant")]
+        public async Task<ActionResult<string>> GetRandomParticipant(int teamId)
         {
             try
             {
-                var participant = await _teamService.GetRandomParticipant(id);
+                var participant = await _teamService.GetRandomParticipant(teamId);
                 return Ok(participant);
             }
             catch (KeyNotFoundException)
@@ -128,11 +128,11 @@ namespace TeaRoundPickerWebAPI.Controllers
             }
         }
 
-        // GET: api/Teams/{id}/previous-participant-selections
-        [HttpGet("{id}/previous-participant-selections")]
-        public async Task<ActionResult<IEnumerable<TeamParticipantSelectionEntry>>> GetPreviousParticipantSelections(string id)
+        // GET: api/Teams/{teamId}/previous-participant-selections
+        [HttpGet("{teamId}/previous-participant-selections")]
+        public async Task<ActionResult<IEnumerable<TeamParticipantSelectionEntry>>> GetPreviousParticipantSelections(int teamId)
         {
-            var selections = await _teamService.GetPreviousParticipantSelectionsForTeam(id);
+            var selections = await _teamService.GetPreviousParticipantSelectionsForTeam(teamId);
             return Ok(selections);
         }
     }

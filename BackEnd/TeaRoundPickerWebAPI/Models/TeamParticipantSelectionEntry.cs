@@ -1,14 +1,27 @@
+// Models/TeamParticipantSelectionEntry.cs
 using System;
 using System.Collections.Generic;
 
 namespace TeaRoundPickerWebAPI.Models
 {
-    public class TeamParticipantSelectionEntry(string teamId, List<string> participants, string chosenParticipant)
+    public class TeamParticipantSelectionEntry
     {
-        public int Id { get; set; } // Primary key
-        public string TeamId { get; set; } = teamId;
-        public List<string> Participants { get; set; } = participants;
-        public string ChosenParticipant { get; set; } = chosenParticipant;
+        public int Id { get; set; }
+        public int TeamId { get; set; }
+        public List<ParticipantSnapshot> Participants { get; set; } // Use snapshots
+        public string ChosenParticipant { get; set; }
         public DateTime Date { get; set; } = DateTime.UtcNow;
+
+        public TeamParticipantSelectionEntry()
+        {
+            Participants = new List<ParticipantSnapshot>();
+        }
+
+        public TeamParticipantSelectionEntry(int teamId, List<ParticipantSnapshot> participants, string chosenParticipant)
+        {
+            TeamId = teamId;
+            Participants = participants;
+            ChosenParticipant = chosenParticipant;
+        }
     }
-} 
+}
