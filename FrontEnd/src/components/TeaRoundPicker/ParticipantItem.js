@@ -4,7 +4,7 @@ const ParticipantItem = ({ participant, index, handlePreferredTeaChange, handleR
   return (
     <li className="list-group-item">
       <div className="row align-items-center">
-        <div className="col-auto" style={{ width: '150px' }}>
+        <div className="col-3">
           <span>{participant.name}</span>
         </div>
         <div className="col">
