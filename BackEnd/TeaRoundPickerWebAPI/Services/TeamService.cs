@@ -135,8 +135,8 @@ namespace TeaRoundPickerWebAPI.Services
 
             // Create a new TeamParticipantSelectionEntry for each selection
             var selectionEntry = new TeamParticipantSelectionEntry(teamId, team.Participants, selectedParticipant);
-            _context.TeamParticipantSelectionEntries.Add(selectionEntry);
 
+            _context.TeamParticipantSelectionEntries.Add(selectionEntry);
             await _context.SaveChangesAsync();
 
             return selectedParticipant;

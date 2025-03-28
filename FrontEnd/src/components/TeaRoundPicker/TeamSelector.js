@@ -38,12 +38,15 @@ const TeamSelector = ({ onTeamSelect, teams, fetchTeams }) => {
       });
 
       // Check if the response is successful
-      if (response.status !== 200) {
+      if (response.status !== 201) {
         throw new Error('Failed to create team');
       }
-
+      
       await fetchTeams(); // Fetch the updated list of teams
-      onTeamSelect(newTeam); // Automatically select the newly created team
+      var newCreatedTeam = response.data;
+      setSelectedTeam(newCreatedTeam); // Update selectedTeam state
+      onTeamSelect(newCreatedTeam); // Automatically select the newly created team
+      
     } catch (error) {
       console.error('Error creating team:', error);
       setErrorMessage('Error creating team. Please try again.');

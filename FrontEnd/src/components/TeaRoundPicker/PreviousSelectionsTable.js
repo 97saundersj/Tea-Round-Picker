@@ -29,19 +29,17 @@ const PreviousSelectionsTable = ({ teamId, refresh }) => {
           <table className="table table-striped">
             <thead className="thead-dark">
               <tr>
-                <th>Selection ID</th>
-                <th>Participants</th>
-                <th>Selected Participant</th>
                 <th>Date</th>
+                <th>Participants</th>
+                <th>Chrosen Participant</th>
               </tr>
             </thead>
             <tbody>
               {selections.map((selection) => (
                 <tr key={selection.id}>
-                  <td>{selection.id}</td>
-                  <td>{selection.participants.join(', ')}</td>
-                  <td>{selection.selectedParticipant}</td>
                   <td>{new Date(selection.date).toLocaleString()}</td>
+                  <td>{selection.participants.join(', ')}</td>
+                  <td>{selection.chosenParticipant}</td>
                 </tr>
               ))}
             </tbody>

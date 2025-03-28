@@ -99,9 +99,7 @@ const TeaWheel = ({ participants, teamId, showModal, onClose, pickedTeaMaker }) 
               <Button 
                 variant="primary" 
                 onClick={() => {
-                  const randomIndex = Math.floor(Math.random() * participants.length);
-                  setSelectedParticipant(participants[randomIndex]);
-                  setIsSpinning(true);
+                  fetchRandomParticipant();
                 }} 
               >
                 Spin Again?
