@@ -83,51 +83,6 @@ namespace TeaRoundPickerWebAPI.Controllers
             }
         }
 
-        // POST: api/Teams/{id}/participants
-        [HttpPost("{id}/participants")]
-        public async Task<IActionResult> AddParticipant(int id, [FromBody] string participantName)
-        {
-            try
-            {
-                await _teamService.AddParticipant(id, participantName);
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-        }
-
-        // DELETE: api/Teams/{teamId}/participants/{participantName}
-        [HttpDelete("{teamId}/participants/{participantName}")]
-        public async Task<IActionResult> RemoveParticipant(int teamId, string participantName)
-        {
-            try
-            {
-                await _teamService.RemoveParticipant(teamId, participantName);
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-        }
-
-        // GET: api/Teams/{teamId}/random-participant
-        [HttpGet("{teamId}/random-participant")]
-        public async Task<ActionResult<string>> GetRandomParticipant(int teamId)
-        {
-            try
-            {
-                var participant = await _teamService.GetRandomParticipant(teamId);
-                return Ok(participant);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-        }
-
         // GET: api/Teams/{teamId}/previous-participant-selections
         [HttpGet("{teamId}/previous-participant-selections")]
         public async Task<ActionResult<IEnumerable<TeamParticipantSelectionEntry>>> GetPreviousParticipantSelections(int teamId)

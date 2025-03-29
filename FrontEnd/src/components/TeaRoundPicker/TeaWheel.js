@@ -12,7 +12,7 @@ const TeaWheel = ({ participants, teamId, showModal, onClose, pickedTeaMaker }) 
 
   const fetchRandomParticipant = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/random-participant`);
+      const response = await axios.get(`${process.env.REACT_APP_WEB_API_URL}/participant/${teamId}/random`);
       const participant = response.data;
       
       setSelectedParticipant(participant);

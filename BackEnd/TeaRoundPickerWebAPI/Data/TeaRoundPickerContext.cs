@@ -12,6 +12,6 @@ namespace TeaRoundPickerWebAPI.Data
         public DbSet<Team> Teams { get; set; }
         public DbSet<TeamParticipantSelectionEntry> TeamParticipantSelectionEntries { get; set; }
 
-        public DbSet<ParticipantSnapshot> ParticipantSnapshots { get; set; }
+        public DbSet<Participant> ParticipantSnapshots { get; set; }
     }
 }

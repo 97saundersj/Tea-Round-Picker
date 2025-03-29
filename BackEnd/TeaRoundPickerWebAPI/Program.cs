@@ -11,6 +11,7 @@ builder.Services.AddDbContext<TeaRoundPickerContext>(options => options.UseInMem
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITeamService, TeamService>();
+builder.Services.AddScoped<IParticipantService, ParticipantService>();
 
 // Add CORS services
 builder.Services.AddCors(options =>

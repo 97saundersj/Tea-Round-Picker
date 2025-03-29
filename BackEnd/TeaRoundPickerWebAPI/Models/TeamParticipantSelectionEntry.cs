@@ -8,16 +8,16 @@ namespace TeaRoundPickerWebAPI.Models
     {
         public int Id { get; set; }
         public int TeamId { get; set; }
-        public List<ParticipantSnapshot> Participants { get; set; } // Use snapshots
+        public List<Participant> Participants { get; set; }
         public string ChosenParticipant { get; set; }
         public DateTime Date { get; set; } = DateTime.UtcNow;
 
         public TeamParticipantSelectionEntry()
         {
-            Participants = new List<ParticipantSnapshot>();
+            Participants = new List<Participant>();
         }
 
-        public TeamParticipantSelectionEntry(int teamId, List<ParticipantSnapshot> participants, string chosenParticipant)
+        public TeamParticipantSelectionEntry(int teamId, List<Participant> participants, string chosenParticipant)
         {
             TeamId = teamId;
             Participants = participants;
