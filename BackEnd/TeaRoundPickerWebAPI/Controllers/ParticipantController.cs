@@ -58,5 +58,20 @@ namespace TeaRoundPickerWebAPI.Controllers
                 return NotFound();
             }
         }
+
+        // PUT: api/Participant/{teamId}/{oldParticipantName}
+        [HttpPut("{teamId}/{oldParticipantName}")]
+        public async Task<IActionResult> EditParticipant(int teamId, string oldParticipantName, [FromBody] string preferredTea)
+        {
+            try
+            {
+                await _participantService.EditParticipant(teamId, oldParticipantName, preferredTea);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+        }
     }
 } 

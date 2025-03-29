@@ -9,5 +9,7 @@ namespace TeaRoundPickerWebAPI.Services
         Task RemoveParticipant(int teamId, string participantName);
 
         Task<string> GetRandomParticipant(int teamId);
+
+        Task EditParticipant(int teamId, string oldParticipantName, string newParticipantName);
     }
 } 

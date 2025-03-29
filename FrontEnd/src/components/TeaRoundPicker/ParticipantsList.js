@@ -53,13 +53,14 @@ const ParticipantsList = ({ participants, setParticipants, teamId, onParticipant
 
   const handlePreferredTeaChange = async (index, newTea) => {
     try {
-      const response = await axios.put(`${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/participants/${participants[index].name}`, {
-        preferredTea: newTea
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.put(`${process.env.REACT_APP_WEB_API_URL}/participant/${teamId}/${participants[index].name}`, 
+        newTea,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
       if (response.status !== 204) {
         throw new Error('Failed to update preferred tea');

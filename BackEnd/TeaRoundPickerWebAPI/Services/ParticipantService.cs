@@ -4,18 +4,14 @@ using TeaRoundPickerWebAPI.Models;
 
 namespace TeaRoundPickerWebAPI.Services
 {
-    public class ParticipantService : IParticipantService
+    public class ParticipantService(TeaRoundPickerContext context, ITeamService teamService) : IParticipantService
     {
-        private readonly TeaRoundPickerContext _context;
-
-        public ParticipantService(TeaRoundPickerContext context)
-        {
-            _context = context;
-        }
+        private readonly TeaRoundPickerContext _context = context;
+        private readonly ITeamService _teamService = teamService;
 
         public async Task AddParticipant(int teamId, string participantName)
         {
-            var team = await _context.Teams.FindAsync(teamId);
+            var team = await _teamService.GetTeam(teamId);
             if (team == null)
             {
                 throw new KeyNotFoundException("Team not found.");
@@ -32,7 +28,7 @@ namespace TeaRoundPickerWebAPI.Services
 
         public async Task RemoveParticipant(int teamId, string participantName)
         {
-            var team = await _context.Teams.Include(t => t.Participants).FirstOrDefaultAsync(t => t.Id == teamId);
+            var team = await _teamService.GetTeam(teamId);
             if (team == null)
             {
                 throw new KeyNotFoundException("Team not found.");
@@ -48,7 +44,7 @@ namespace TeaRoundPickerWebAPI.Services
 
         public async Task<string> GetRandomParticipant(int teamId)
         {
-            var team = await _context.Teams.Include(t => t.Participants).FirstOrDefaultAsync(t => t.Id == teamId);
+            var team = await _teamService.GetTeam(teamId);
             if (team == null || !team.Participants.Any())
             {
                 throw new KeyNotFoundException("Team not found or has no participants.");
@@ -68,6 +64,26 @@ namespace TeaRoundPickerWebAPI.Services
             await _context.SaveChangesAsync();
 
             return selectedParticipant.Name;
+        }
+
+        public async Task EditParticipant(int teamId, string participantName, string preferredTea)
+        {
+            var team = await _teamService.GetTeam(teamId);
+            if (team == null)
+            {
+                throw new KeyNotFoundException("Team not found.");
+            }
+
+            var existingParticipant = team.Participants.FirstOrDefault(p => p.Name == participantName);
+            if (existingParticipant != null)
+            {
+                existingParticipant.PreferredTea = preferredTea;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new KeyNotFoundException("Participant not found.");
+            }
         }
     }
 } 
