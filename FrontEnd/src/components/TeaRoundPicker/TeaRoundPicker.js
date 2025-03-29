@@ -3,7 +3,7 @@ import axios from 'axios';
 import TeaWheel from './TeaWheel';
 import TeamSelector from './TeamSelector';
 import ParticipantsList from './ParticipantsList';
-import PreviousSelectionsTable from './PreviousSelectionsTable';
+import TeaRoundsTable from './TeaRoundsTable';
 
 const TeaRoundPicker = () => {
   const [participants, setParticipants] = useState([]);
@@ -73,7 +73,7 @@ const TeaRoundPicker = () => {
         pickedTeaMaker={pickedTeaMaker}
       />
       
-      <PreviousSelectionsTable teamId={selectedTeamId} refresh={refetchPreviousSelections} />
+      <TeaRoundsTable teamId={selectedTeamId} refresh={refetchPreviousSelections} />
     </div>
   );
 };

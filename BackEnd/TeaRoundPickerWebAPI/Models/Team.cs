@@ -4,13 +4,8 @@ namespace TeaRoundPickerWebAPI.Models
 {
     public class Team
     {
-        // Properties
-        public int Id { get; set; }
-        public string Label { get; set; }
-        public List<Participant> Participants { get; set; }
-
         // Parameterless constructor for EF
-        public Team() 
+        public Team()
         {
             Participants = new List<Participant>(); // Initialize the list
         }
@@ -22,5 +17,10 @@ namespace TeaRoundPickerWebAPI.Models
             Label = label;
             Participants = participants;
         }
+
+        // Properties
+        public int Id { get; set; }
+        public string Label { get; set; }
+        public List<Participant> Participants { get; set; }
     }
 } 

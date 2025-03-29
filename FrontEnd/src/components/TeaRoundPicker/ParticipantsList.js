@@ -8,7 +8,7 @@ const ParticipantsList = ({ participants, setParticipants, teamId, onParticipant
 
   const addParticipantToAPI = async (participantName) => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/participants`, participantName, {
+      const response = await axios.post(`${process.env.REACT_APP_WEB_API_URL}/participant/${teamId}`, participantName, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -38,7 +38,7 @@ const ParticipantsList = ({ participants, setParticipants, teamId, onParticipant
   const handleRemoveParticipant = async (index) => {
     const participantToRemove = participants[index].name;
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/participants/${participantToRemove}`);
+      const response = await axios.delete(`${process.env.REACT_APP_WEB_API_URL}/participant/${teamId}/${participantToRemove}`);
 
       if (response.status !== 204) {
         throw new Error('Failed to remove participant');
@@ -53,13 +53,14 @@ const ParticipantsList = ({ participants, setParticipants, teamId, onParticipant
 
   const handlePreferredTeaChange = async (index, newTea) => {
     try {
-      const response = await axios.put(`${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/participants/${participants[index].name}`, {
-        preferredTea: newTea
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.put(`${process.env.REACT_APP_WEB_API_URL}/participant/${teamId}/${participants[index].name}`, 
+        newTea,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
       if (response.status !== 204) {
         throw new Error('Failed to update preferred tea');
