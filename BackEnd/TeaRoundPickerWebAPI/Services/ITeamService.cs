@@ -15,6 +15,6 @@ namespace TeaRoundPickerWebAPI.Services
 
         Task DeleteTeam(int id);
 
-        Task<IEnumerable<TeamParticipantSelectionEntry>> GetPreviousParticipantSelectionsForTeam(int teamId);
+        Task<IEnumerable<TeaRound>> GetPreviousParticipantSelectionsForTeam(int teamId);
     }
 } 

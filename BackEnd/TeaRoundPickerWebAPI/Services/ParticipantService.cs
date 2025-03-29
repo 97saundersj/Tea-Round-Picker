@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using TeaRoundPickerWebAPI.Data;
 using TeaRoundPickerWebAPI.Models;
 
@@ -20,6 +19,7 @@ namespace TeaRoundPickerWebAPI.Services
             if (!team.Participants.Exists(p => p.Name == participantName))
             {
                 var newParticipant = new Participant(0, participantName, "");
+                _context.Participants.Add(newParticipant);
 
                 team.Participants.Add(newParticipant);
                 await _context.SaveChangesAsync();
@@ -54,13 +54,17 @@ namespace TeaRoundPickerWebAPI.Services
             int index = random.Next(team.Participants.Count);
             var selectedParticipant = team.Participants[index];
 
-            var selectionEntry = new TeamParticipantSelectionEntry(
-                teamId, 
-                team.Participants,
+            var teaOrders = team.Participants
+                .Select(p => new TeaOrder(p.Id, p.Name, p.PreferredTea))
+                .ToList();
+
+            var teaRound = new TeaRound(
+                teamId,
+                teaOrders,
                 selectedParticipant.Name
             );
 
-            _context.TeamParticipantSelectionEntries.Add(selectionEntry);
+            _context.TeaRounds.Add(teaRound);
             await _context.SaveChangesAsync();
 
             return selectedParticipant.Name;
@@ -86,4 +90,4 @@ namespace TeaRoundPickerWebAPI.Services
             }
         }
     }
-} 
+}

@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const ParticipantItem = ({ participant, index, handlePreferredTeaChange, handleRemoveParticipant }) => {
+  const [inputValue, setInputValue] = useState(participant.preferredTea);
+
   const handleTeaChange = (e) => {
-    const newTea = e.target.value;
-    handlePreferredTeaChange(index, newTea);
+    setInputValue(e.target.value);
+  };
+
+  const handleBlur = () => {
+    handlePreferredTeaChange(index, inputValue);
   };
 
   return (
@@ -17,9 +22,10 @@ const ParticipantItem = ({ participant, index, handlePreferredTeaChange, handleR
               type="text"
               name="preferredTea"
               className="form-control"
-              defaultValue={participant.preferredTea}
+              value={inputValue}
               placeholder="Preferred Tea"
-              onBlur={handleTeaChange}
+              onChange={handleTeaChange}
+              onBlur={handleBlur}
             />
         </div>
         <div className="col-auto">

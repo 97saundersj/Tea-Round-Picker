@@ -55,14 +55,14 @@ const PreviousSelectionsTable = ({ teamId, refresh }) => {
                     <thead className="thead-dark">
                       <tr>
                         <th>Participant</th>
-                        <th>Preferred Tea</th>
+                        <th>Tea Order</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {selection.participants.map((participant) => (
-                        <tr key={participant.id}>
-                          <td>{participant.name}</td>
-                          <td>{participant.preferredTea}</td>
+                      {selection.teaOrders.map((teaOrder) => (
+                        <tr key={teaOrder.id}>
+                          <td>{teaOrder.participantName}</td>
+                          <td>{teaOrder.preferredTeaOrder}</td>
                         </tr>
                       ))}
                     </tbody>

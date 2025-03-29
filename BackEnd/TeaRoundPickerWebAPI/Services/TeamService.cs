@@ -5,14 +5,9 @@ using TeaRoundPickerWebAPI.Models;
 
 namespace TeaRoundPickerWebAPI.Services
 {
-    public class TeamService : ITeamService
+    public class TeamService(TeaRoundPickerContext context) : ITeamService
     {
-        private readonly TeaRoundPickerContext _context;
-
-        public TeamService(TeaRoundPickerContext context)
-        {
-            _context = context;
-        }
+        private readonly TeaRoundPickerContext _context = context;
 
         public async Task<IEnumerable<Team>> GetTeams()
         {
@@ -95,11 +90,11 @@ namespace TeaRoundPickerWebAPI.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<TeamParticipantSelectionEntry>> GetPreviousParticipantSelectionsForTeam(int teamId)
+        public async Task<IEnumerable<TeaRound>> GetPreviousParticipantSelectionsForTeam(int teamId)
         {
-            return await _context.TeamParticipantSelectionEntries
+            return await _context.TeaRounds
                 .Where(entry => entry.TeamId == teamId)
-                .Include(t => t.Participants)
+                .Include(t => t.TeaOrders)
                 .ToListAsync();
         }
 
