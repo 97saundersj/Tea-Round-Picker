@@ -4,48 +4,50 @@ import { Wheel } from 'react-custom-roulette';
 import { Modal, Button, Alert } from 'react-bootstrap';
 import oilcanSvg from '../../images/oil-can.svg';
 
-const TeaWheel = ({ participants, teamId, showModal, onClose, pickedTeaMaker }) => {
+const TeaWheel = ({ participants = [], teamId, showModal, onClose, pickedTeaMaker }) => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [selectedParticipant, setSelectedParticipant] = useState(null);
   const [modalVisible, setModalVisible] = useState(showModal);
   const [prizeNumber, setPrizeNumber] = useState(0);
+  
+  // Create wheel data from participants
+  const wheelData = participants.length > 0 
+    ? participants.map(p => ({ option: p.name }))
+    : [{ option: 'No participants' }];
 
-  const fetchRandomParticipant = async () => {
+  // Pick random tea maker
+  const pickTeaMaker = async () => {
+    if (!teamId || participants.length === 0) return;
+    
     try {
       const response = await axios.get(`${process.env.REACT_APP_WEB_API_URL}/participant/${teamId}/random`);
-      const participant = response.data;
+      const participantName = response.data;
+      setSelectedParticipant(participantName);
       
-      setSelectedParticipant(participant);
-      
-      // Find the index of the selected participant in the participants list
-      const index = participants.findIndex(p => p.name === participant.name);
-      if (index !== -1) {
-        setPrizeNumber(index);
-      }
-      
-      setIsSpinning(true);
+      const index = participants.findIndex(p => p.name === participantName);
+      setPrizeNumber(index !== -1 ? index : 0);
       setModalVisible(true);
+      
+      // Small delay to ensure state is updated
+      setTimeout(() => setIsSpinning(true), 50);
     } catch (error) {
-      console.error("Error fetching random participant:", error);
+      console.error("Error picking tea maker:", error);
     }
   };
 
-  const data = participants.map((participant) => ({ option: participant.name }));
-
+  // Wheel callbacks
   const handleSpinEnd = () => {
     setIsSpinning(false);
-    if (pickedTeaMaker) {
-      pickedTeaMaker();
-    }
+    if (typeof pickedTeaMaker === 'function') pickedTeaMaker();
   };
 
   const handleClose = () => {
+    setIsSpinning(false);
     setModalVisible(false);
+    if (typeof onClose === 'function') onClose();
   };
 
-  if (!teamId) {
-    return null; // Do not render the component if teamId is not defined
-  }
+  if (!teamId) return null;
 
   return (
     <div className="card m-2">
@@ -53,7 +55,7 @@ const TeaWheel = ({ participants, teamId, showModal, onClose, pickedTeaMaker }) 
         <h5 className="card-title">Pick Tea Maker</h5>
         <button
           className="btn btn-success btn-lg w-100 mb-3"
-          onClick={fetchRandomParticipant}
+          onClick={pickTeaMaker}
           disabled={isSpinning || participants.length === 0}
         >
           Pick Tea Maker
@@ -70,7 +72,7 @@ const TeaWheel = ({ participants, teamId, showModal, onClose, pickedTeaMaker }) 
             <Wheel
               mustStartSpinning={isSpinning}
               prizeNumber={prizeNumber}
-              data={data}
+              data={wheelData}
               onStopSpinning={handleSpinEnd}
               spinDuration={0.3}
               backgroundColors={['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#D4A5A5', '#9B59B6', '#3498DB']}
@@ -105,7 +107,7 @@ const TeaWheel = ({ participants, teamId, showModal, onClose, pickedTeaMaker }) 
             {selectedParticipant && !isSpinning && (
               <Button 
                 variant="primary" 
-                onClick={fetchRandomParticipant}
+                onClick={pickTeaMaker}
               >
                 Spin Again?
               </Button>

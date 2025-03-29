@@ -60,7 +60,7 @@ const TeaRoundsTable = ({ teamId, refresh }) => {
                       {selection.teaOrders.map((teaOrder) => (
                         <tr key={teaOrder.id}>
                           <td>{teaOrder.participantName}</td>
-                          <td>{teaOrder.preferredTeaOrder}</td>
+                          <td>{teaOrder.preferredTeaOrder || <small className="text-muted fst-italic">None Specified</small>}</td>
                         </tr>
                       ))}
                     </tbody>
