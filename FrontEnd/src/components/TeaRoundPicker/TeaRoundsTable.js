@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-// import { format } from 'date-fns';
 
-const PreviousSelectionsTable = ({ teamId, refresh }) => {
+const TeaRoundsTable = ({ teamId, refresh }) => {
   const [selections, setSelections] = useState([]);
   const [error, setError] = useState(null);
 
@@ -32,15 +31,15 @@ const PreviousSelectionsTable = ({ teamId, refresh }) => {
             <div className="accordion-item" key={selection.id}>
               <h2 className="accordion-header" id={`heading${index}`}>
                 <button
-                  className="accordion-button"
+                  className="accordion-button collapsed"
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target={`#collapse${index}`}
-                  aria-expanded="true"
+                  aria-expanded="false"
                   aria-controls={`collapse${index}`}
                 >
                   <b>
-                    {new Intl.DateTimeFormat('en-UK', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(selection.date))} - {selection.chosenParticipant}
+                    {new Intl.DateTimeFormat('en-UK', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(selection.date))} - {selection.chosenParticipant} made tea
                   </b>
                 </button>
               </h2>
@@ -48,7 +47,6 @@ const PreviousSelectionsTable = ({ teamId, refresh }) => {
                 id={`collapse${index}`}
                 className="accordion-collapse collapse"
                 aria-labelledby={`heading${index}`}
-                data-bs-parent="#teaRoundAccordion"
               >
                 <div className="accordion-body">
                   <table className="table table-hover">
@@ -77,4 +75,4 @@ const PreviousSelectionsTable = ({ teamId, refresh }) => {
   );
 };
 
-export default PreviousSelectionsTable; 
+export default TeaRoundsTable; 
