@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TeaRound } from '../../types/types';
+import { TeaRound } from '../../types/Types';
 import { api } from '../../services/api';
 
 interface TeaRoundsTableProps {

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Team, CreateTeamDto, TeaRound } from '../types/types';
+import { Team, CreateTeamDto, TeaRound } from '../types/Types';
 
 const API_URL = process.env.REACT_APP_WEB_API_URL;
 

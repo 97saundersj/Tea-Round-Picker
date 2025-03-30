@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import CreatableSelect from 'react-select/creatable';
-import { Team, CreateTeamDto } from '../../types/types';
+import { Team, CreateTeamDto } from '../../types/Types';
 import { api } from '../../services/api';
 
 interface TeamSelectorProps {

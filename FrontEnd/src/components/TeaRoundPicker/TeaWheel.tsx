@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Wheel } from 'react-custom-roulette';
 import { Modal, Button, Alert } from 'react-bootstrap';
 import oilcanSvg from '../../images/oil-can.svg';
-import { Participant } from '../../types/types';
+import { Participant } from '../../types/Types';
 import { api } from '../../services/api';
 
 interface TeaWheelProps {

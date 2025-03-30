@@ -1,6 +1,6 @@
 import React, { useState, FormEvent } from 'react';
 import ParticipantItem from './ParticipantItem';
-import { Participant, Team } from '../../types/types';
+import { Participant, Team } from '../../types/Types';
 import { api } from '../../services/api';
 
 interface ParticipantsListProps {

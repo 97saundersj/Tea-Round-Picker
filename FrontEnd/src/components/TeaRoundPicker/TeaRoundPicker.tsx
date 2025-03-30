@@ -3,7 +3,7 @@ import TeaWheel from './TeaWheel';
 import TeamSelector from './TeamSelector';
 import ParticipantsList from './ParticipantsList';
 import TeaRoundsTable from './TeaRoundsTable';
-import { Team, Participant } from '../../types/types';
+import { Team, Participant } from '../../types/Types';
 import { api } from '../../services/api';
 
 const TeaRoundPicker: React.FC = () => {
