@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent } from 'react';
-import { Participant } from '../../types/types';
+import { Participant } from 'types/types';
 
 interface ParticipantItemProps {
   participant: Participant;
