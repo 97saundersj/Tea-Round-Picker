@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import TeaWheel from './TeaWheel';
 import TeamSelector from './TeamSelector';
 import ParticipantsList from './ParticipantsList';
 import TeaRoundsTable from './TeaRoundsTable';
-import { Team, Participant, TeamsResponse } from '../../types/Types';
+import { Team, Participant } from '../../types/types';
+import { api } from '../../services/api';
 
 const TeaRoundPicker: React.FC = () => {
   const [participants, setParticipants] = useState<Participant[]>([]);
@@ -15,8 +15,8 @@ const TeaRoundPicker: React.FC = () => {
 
   const fetchTeams = async (): Promise<void> => {
     try {
-      const response = await axios.get<TeamsResponse>(`${process.env.REACT_APP_WEB_API_URL}/teams`);
-      setTeams(response.data);
+      const response = await api.getTeams();
+      setTeams(response);
     } catch (error) {
       console.error('Error fetching teams:', error);
     }
@@ -24,9 +24,9 @@ const TeaRoundPicker: React.FC = () => {
 
   const fetchTeamById = async (teamId: number): Promise<void> => {
     try {
-      const response = await axios.get<Team>(`${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}`);
-      setParticipants(response.data.participants || []);
-      setSelectedTeamId(response.data.id);
+      const response = await api.getTeamById(teamId);
+      setParticipants(response.participants || []);
+      setSelectedTeamId(response.id);
     } catch (error) {
       console.error('Error fetching team:', error);
     }

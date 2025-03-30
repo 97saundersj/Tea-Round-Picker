@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Wheel } from 'react-custom-roulette';
 import { Modal, Button, Alert } from 'react-bootstrap';
 import oilcanSvg from '../../images/oil-can.svg';
-import { Participant, RandomParticipantResponse } from '../../types/Types';
+import { Participant } from '../../types/types';
+import { api } from '../../services/api';
 
 interface TeaWheelProps {
   participants: Participant[];
@@ -39,10 +39,7 @@ const TeaWheel: React.FC<TeaWheelProps> = ({
     if (!teamId || participants.length === 0) return;
     
     try {
-      const response = await axios.get<RandomParticipantResponse>(
-        `${process.env.REACT_APP_WEB_API_URL}/participant/${teamId}/random`
-      );
-      const participantName = response.data;
+      const participantName = await api.getRandomParticipant(teamId);
       setSelectedParticipant(participantName);
       
       const index = participants.findIndex(p => p.name === participantName);

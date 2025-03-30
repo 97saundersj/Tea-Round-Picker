@@ -34,8 +34,3 @@ export interface TeaRound {
     team: Team;
     chosenParticipant: Participant;
 }
-
-// API Response Types
-export type TeamsResponse = Team[];
-export type TeaRoundsResponse = TeaRound[];
-export type RandomParticipantResponse = string; 

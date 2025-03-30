@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import CreatableSelect from 'react-select/creatable';
-import axios from 'axios';
-import { Team, CreateTeamDto } from '../../types/Types';
+import { Team, CreateTeamDto } from '../../types/types';
+import { api } from '../../services/api';
 
 interface TeamSelectorProps {
   onTeamSelect: (team: Team | null) => void;
@@ -38,22 +38,10 @@ const TeamSelector: React.FC<TeamSelectorProps> = ({ onTeamSelect, teams, fetchT
     const newTeam: CreateTeamDto = { label: newValue };
 
     try {
-      const response = await axios.post<Team>(`${process.env.REACT_APP_WEB_API_URL}/teams`, newTeam, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      // Check if the response is successful
-      if (response.status !== 201) {
-        throw new Error('Failed to create team');
-      }
-      
+      const newCreatedTeam = await api.createTeam(newTeam);
       await fetchTeams(); // Fetch the updated list of teams
-      const newCreatedTeam = response.data;
       setSelectedTeam(newCreatedTeam); // Update selectedTeam state
       onTeamSelect(newCreatedTeam); // Automatically select the newly created team
-      
     } catch (error) {
       console.error('Error creating team:', error);
       setErrorMessage('Error creating team. Please try again.');

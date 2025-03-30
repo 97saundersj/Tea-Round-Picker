@@ -1,7 +1,7 @@
 import React, { useState, FormEvent } from 'react';
-import axios from 'axios';
 import ParticipantItem from './ParticipantItem';
-import { Participant, Team } from '../../types/Types';
+import { Participant, Team } from '../../types/types';
+import { api } from '../../services/api';
 
 interface ParticipantsListProps {
   participants: Participant[];
@@ -23,19 +23,7 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
     if (!teamId) return;
     
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_WEB_API_URL}/participant/${teamId}`, 
-        participantName,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      if (response.status !== 204) {
-        throw new Error('Failed to add participant');
-      }
+      await api.addParticipant(teamId, participantName);
     } catch (error) {
       console.error("Error adding participant:", error);
       setErrorMessage('Error adding participant. Please try again.');
@@ -67,14 +55,7 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
     
     const participantToRemove = participants[index];
     try {
-      const response = await axios.delete(
-        `${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/${participantToRemove.id}`
-      );
-
-      if (response.status !== 204) {
-        throw new Error('Failed to remove participant');
-      }
-
+      await api.removeParticipant(teamId, participantToRemove.id);
       setParticipants(participants.filter((_, i) => i !== index));
     } catch (error) {
       console.error("Error removing participant:", error);
@@ -84,20 +65,7 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
 
   const handlePreferredTeaChange = async (id: number, newTea: string): Promise<void> => {
     try {
-      const response = await axios.put(
-        `${process.env.REACT_APP_WEB_API_URL}/participant/${id}`, 
-        newTea,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      if (response.status !== 204) {
-        throw new Error('Failed to update preferred tea');
-      }
-
+      await api.updatePreferredTea(id, newTea);
       setParticipants(participants.map((participant) =>
         participant.id === id ? { ...participant, preferredTea: newTea } : participant
       ));

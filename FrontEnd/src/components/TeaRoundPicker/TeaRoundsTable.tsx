@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { TeaRound, TeaRoundsResponse } from '../../types/Types';
+import { TeaRound } from '../../types/types';
+import { api } from '../../services/api';
 
 interface TeaRoundsTableProps {
   teamId: number | null;
@@ -15,10 +15,8 @@ const TeaRoundsTable: React.FC<TeaRoundsTableProps> = ({ teamId, refresh }) => {
     const fetchSelections = async (): Promise<void> => {
       if (teamId) {
         try {
-          const response = await axios.get<TeaRoundsResponse>(
-            `${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/previous-participant-selections`
-          );
-          setSelections(response.data);
+          const response = await api.getPreviousTeaRounds(teamId);
+          setSelections(response);
         } catch (err) {
           setError('Error fetching previous selections.');
         }
