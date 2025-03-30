@@ -66,7 +66,7 @@ namespace TeaRoundPickerWebAPI.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/api/Teams/999999");
-            response = null;
+
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
