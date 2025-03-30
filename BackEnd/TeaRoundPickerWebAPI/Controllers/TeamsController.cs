@@ -87,7 +87,7 @@ namespace TeaRoundPickerWebAPI.Controllers
         [HttpGet("{teamId}/previous-participant-selections")]
         public async Task<ActionResult<IEnumerable<TeaRound>>> GetPreviousParticipantSelections(int teamId)
         {
-            var selections = await _teamService.GetPreviousParticipantSelectionsForTeam(teamId);
+            var selections = await _teamService.GetTeaRounds(teamId);
             return Ok(selections);
         }
     }

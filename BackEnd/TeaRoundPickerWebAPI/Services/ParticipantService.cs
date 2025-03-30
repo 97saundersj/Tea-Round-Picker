@@ -55,13 +55,13 @@ namespace TeaRoundPickerWebAPI.Services
             var selectedParticipant = team.Participants[index];
 
             var teaOrders = team.Participants
-                .Select(p => new TeaOrder(p.Id, p.Name, p.PreferredTea))
+                .Select(p => new TeaOrder(p.Id, p.PreferredTea))
                 .ToList();
 
             var teaRound = new TeaRound(
                 teamId,
-                teaOrders,
-                selectedParticipant.Name
+                selectedParticipant.Id,
+                teaOrders
             );
 
             _context.TeaRounds.Add(teaRound);

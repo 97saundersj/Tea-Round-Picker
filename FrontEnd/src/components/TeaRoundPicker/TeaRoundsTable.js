@@ -39,7 +39,7 @@ const TeaRoundsTable = ({ teamId, refresh }) => {
                   aria-controls={`collapse${index}`}
                 >
                   <b>
-                    {new Intl.DateTimeFormat('en-UK', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(selection.date))} - {selection.chosenParticipant} made tea
+                    {new Intl.DateTimeFormat('en-UK', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(selection.date))} - {selection.chosenParticipant.name} made tea
                   </b>
                 </button>
               </h2>
@@ -59,8 +59,8 @@ const TeaRoundsTable = ({ teamId, refresh }) => {
                     <tbody>
                       {selection.teaOrders.map((teaOrder) => (
                         <tr key={teaOrder.id}>
-                          <td>{teaOrder.participantName}</td>
-                          <td>{teaOrder.preferredTeaOrder || <small className="text-muted fst-italic">None Specified</small>}</td>
+                          <td>{teaOrder.participant.name}</td>
+                          <td>{teaOrder.requestedTeaOrder || <small className="text-muted fst-italic">None Specified</small>}</td>
                         </tr>
                       ))}
                     </tbody>

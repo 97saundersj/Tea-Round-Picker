@@ -89,11 +89,12 @@ namespace TeaRoundPickerWebAPI.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<TeaRound>> GetPreviousParticipantSelectionsForTeam(int teamId)
+        public async Task<IEnumerable<TeaRound>> GetTeaRounds(int teamId)
         {
             return await _context.TeaRounds
                 .Where(entry => entry.TeamId == teamId)
-                .Include(t => t.TeaOrders)
+                .Include(t => t.TeaOrders).ThenInclude(t => t.Participant)
+                .Include(t => t.ChosenParticipant)
                 .ToListAsync();
         }
 
