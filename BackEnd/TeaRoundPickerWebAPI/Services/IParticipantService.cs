@@ -10,6 +10,6 @@ namespace TeaRoundPickerWebAPI.Services
 
         Task<string> GetRandomParticipant(int teamId);
 
-        Task EditParticipant(int teamId, string oldParticipantName, string newParticipantName);
+        Task EditParticipant(int id, string preferredTea);
     }
 } 

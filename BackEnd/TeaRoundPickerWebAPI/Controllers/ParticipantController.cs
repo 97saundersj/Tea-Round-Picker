@@ -14,7 +14,6 @@ namespace TeaRoundPickerWebAPI.Controllers
             _participantService = participantService;
         }
 
-        // POST: api/Participant/{teamId}
         [HttpPost("{teamId}")]
         public async Task<IActionResult> AddParticipant(int teamId, [FromBody] string participantName)
         {
@@ -29,7 +28,6 @@ namespace TeaRoundPickerWebAPI.Controllers
             }
         }
 
-        // DELETE: api/Participant/{teamId}/{participantName}
         [HttpDelete("{teamId}/{participantName}")]
         public async Task<IActionResult> RemoveParticipant(int teamId, string participantName)
         {
@@ -44,7 +42,6 @@ namespace TeaRoundPickerWebAPI.Controllers
             }
         }
 
-        // GET: api/Participant/{teamId}/random
         [HttpGet("{teamId}/random")]
         public async Task<ActionResult<string>> GetRandomParticipant(int teamId)
         {
@@ -59,13 +56,12 @@ namespace TeaRoundPickerWebAPI.Controllers
             }
         }
 
-        // PUT: api/Participant/{teamId}/{oldParticipantName}
-        [HttpPut("{teamId}/{oldParticipantName}")]
-        public async Task<IActionResult> EditParticipant(int teamId, string oldParticipantName, [FromBody] string preferredTea)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditParticipant(int id, [FromBody] string preferredTea)
         {
             try
             {
-                await _participantService.EditParticipant(teamId, oldParticipantName, preferredTea);
+                await _participantService.EditParticipant(id, preferredTea);
                 return NoContent();
             }
             catch (KeyNotFoundException)

@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TeaRoundPickerWebAPI.Data;
 using TeaRoundPickerWebAPI.Models;
 
@@ -7,6 +8,12 @@ namespace TeaRoundPickerWebAPI.Services
     {
         private readonly TeaRoundPickerContext _context = context;
         private readonly ITeamService _teamService = teamService;
+
+        public async Task<Participant> GetParticipant(int id)
+        {
+            return await _context.Participants
+                .FirstAsync(t => t.Id == id);
+        }
 
         public async Task AddParticipant(int teamId, string participantName)
         {
@@ -70,24 +77,13 @@ namespace TeaRoundPickerWebAPI.Services
             return selectedParticipant.Name;
         }
 
-        public async Task EditParticipant(int teamId, string participantName, string preferredTea)
+        public async Task EditParticipant(int id, string preferredTea)
         {
-            var team = await _teamService.GetTeam(teamId);
-            if (team == null)
-            {
-                throw new KeyNotFoundException("Team not found.");
-            }
+            var participant = await GetParticipant(id);
 
-            var existingParticipant = team.Participants.FirstOrDefault(p => p.Name == participantName);
-            if (existingParticipant != null)
-            {
-                existingParticipant.PreferredTea = preferredTea;
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new KeyNotFoundException("Participant not found.");
-            }
+            participant.PreferredTea = preferredTea;
+
+            await _context.SaveChangesAsync();
         }
     }
 }
