@@ -1,8 +1,7 @@
 import React, { useState, ChangeEvent } from 'react';
-import { Participant } from '../../../src/types/types';
 
 interface ParticipantItemProps {
-  participant: Participant;
+  participant: any;
   index: number;
   handlePreferredTeaChange: (id: number, newTea: string) => Promise<void>;
   handleRemoveParticipant: (index: number) => Promise<void>;
