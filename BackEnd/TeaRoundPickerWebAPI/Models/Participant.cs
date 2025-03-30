@@ -8,10 +8,7 @@ namespace TeaRoundPickerWebAPI.Models
         }
 
         public int Id { get; set; }
-        public int TeamId { get; set; }
         public string Name { get; set; } = name;
         public string PreferredTea { get; set; } = preferredTea;
-
-        public Team? Team { get; set; }
     }
 } 
