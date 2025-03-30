@@ -61,24 +61,9 @@ static void SeedData(TeaRoundPickerContext context)
     if (!context.Teams.Any()) // Check if data already exists
     {
         context.Teams.AddRange(
-            new Team(1, "Data",
-            [
-                new(1, "Alice", "Normal"),
-                new(2, "Bob", "Milk No Sugar"),
-                new(3, "Charlie", "Milk No Sugar")
-            ]),
-            new Team(2, "Dev",
-            [
-                new(4, "David", "Green"),
-                new(5, "Eve", "Black"),
-                new(6, "Frank", "Herbal")
-            ]),
-            new Team(3, "Ops",
-            [
-                new(7, "George", "Oolong"),
-                new(8, "Harry", "Earl Grey"),
-                new(9, "Isabel", "Chai")
-            ])
+            new Team("Data", [new("Alice", "Normal"), new("Bob", "Milk No Sugar"), new("Charlie", "Milk No Sugar")]) { Label = "Data" },
+            new Team("Dev", [new("David", "Green"), new("Eve", "Black"), new("Frank", "Herbal")]) { Label = "Dev" },
+            new Team("Ops", [new("George", "Oolong"), new("Harry", "Earl Grey"), new("Isabel", "Chai")])
         );
         context.SaveChanges(); // Save changes to the in-memory database
     }

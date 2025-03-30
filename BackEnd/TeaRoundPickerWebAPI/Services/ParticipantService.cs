@@ -18,7 +18,7 @@ namespace TeaRoundPickerWebAPI.Services
 
             if (!team.Participants.Exists(p => p.Name == participantName))
             {
-                var newParticipant = new Participant(0, participantName, "");
+                var newParticipant = new Participant(participantName, "");
                 _context.Participants.Add(newParticipant);
 
                 team.Participants.Add(newParticipant);

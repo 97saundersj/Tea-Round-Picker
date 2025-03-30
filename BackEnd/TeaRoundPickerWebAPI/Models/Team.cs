@@ -1,26 +1,15 @@
-using System.Collections.Generic;
-
 namespace TeaRoundPickerWebAPI.Models
 {
-    public class Team
+    public class Team(string label, List<Participant> participants)
     {
         // Parameterless constructor for EF
-        public Team()
+        private Team() : this(string.Empty, [])
         {
-            Participants = new List<Participant>(); // Initialize the list
-        }
-
-        // Constructor with parameters
-        public Team(int id, string label, List<Participant> participants)
-        {
-            Id = id;
-            Label = label;
-            Participants = participants;
         }
 
         // Properties
         public int Id { get; set; }
-        public string Label { get; set; }
-        public List<Participant> Participants { get; set; }
+        public string Label { get; set; } = label;
+        public List<Participant> Participants { get; set; } = participants;
     }
-} 
+}

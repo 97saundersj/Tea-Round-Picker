@@ -12,7 +12,6 @@ namespace TeaRoundPickerWebAPI.Services
         public async Task<IEnumerable<Team>> GetTeams()
         {
             return await _context.Teams
-                .Include(t => t.Participants)
                 .ToListAsync();
         }
 
@@ -56,7 +55,7 @@ namespace TeaRoundPickerWebAPI.Services
                 throw new ArgumentException("Team name is required.");
             }
 
-            var team = new Team(0, createTeamDto.Label, []);
+            var team = new Team(createTeamDto.Label, []);
 
             _context.Teams.Add(team);
             try
