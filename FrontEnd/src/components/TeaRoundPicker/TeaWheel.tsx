@@ -3,24 +3,45 @@ import axios from 'axios';
 import { Wheel } from 'react-custom-roulette';
 import { Modal, Button, Alert } from 'react-bootstrap';
 import oilcanSvg from '../../images/oil-can.svg';
+import { Participant, RandomParticipantResponse } from '../../types/Types';
 
-const TeaWheel = ({ participants = [], teamId, showModal, onClose, pickedTeaMaker }) => {
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [selectedParticipant, setSelectedParticipant] = useState(null);
-  const [modalVisible, setModalVisible] = useState(showModal);
-  const [prizeNumber, setPrizeNumber] = useState(0);
+interface TeaWheelProps {
+  participants: Participant[];
+  teamId: number | null;
+  showModal: boolean;
+  onClose: () => void;
+  pickedTeaMaker: () => void;
+}
+
+interface WheelData {
+  option: string;
+}
+
+const TeaWheel: React.FC<TeaWheelProps> = ({ 
+  participants = [], 
+  teamId, 
+  showModal, 
+  onClose, 
+  pickedTeaMaker 
+}) => {
+  const [isSpinning, setIsSpinning] = useState<boolean>(false);
+  const [selectedParticipant, setSelectedParticipant] = useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState<boolean>(showModal);
+  const [prizeNumber, setPrizeNumber] = useState<number>(0);
   
   // Create wheel data from participants
-  const wheelData = participants.length > 0 
-    ? participants.map(p => ({ option: p.name }))
+  const wheelData: WheelData[] = participants.length > 0 
+    ? participants.map(p => ({ option: p.name || 'Unknown' }))
     : [{ option: 'No participants' }];
 
   // Pick random tea maker
-  const pickTeaMaker = async () => {
+  const pickTeaMaker = async (): Promise<void> => {
     if (!teamId || participants.length === 0) return;
     
     try {
-      const response = await axios.get(`${process.env.REACT_APP_WEB_API_URL}/participant/${teamId}/random`);
+      const response = await axios.get<RandomParticipantResponse>(
+        `${process.env.REACT_APP_WEB_API_URL}/participant/${teamId}/random`
+      );
       const participantName = response.data;
       setSelectedParticipant(participantName);
       
@@ -36,15 +57,15 @@ const TeaWheel = ({ participants = [], teamId, showModal, onClose, pickedTeaMake
   };
 
   // Wheel callbacks
-  const handleSpinEnd = () => {
+  const handleSpinEnd = (): void => {
     setIsSpinning(false);
-    if (typeof pickedTeaMaker === 'function') pickedTeaMaker();
+    pickedTeaMaker();
   };
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setIsSpinning(false);
     setModalVisible(false);
-    if (typeof onClose === 'function') onClose();
+    onClose();
   };
 
   if (!teamId) return null;
@@ -119,4 +140,4 @@ const TeaWheel = ({ participants = [], teamId, showModal, onClose, pickedTeaMake
   );
 };
 
-export default TeaWheel;
+export default TeaWheel; 

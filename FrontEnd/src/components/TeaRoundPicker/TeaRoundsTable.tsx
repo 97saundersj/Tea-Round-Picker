@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { TeaRound, TeaRoundsResponse } from '../../types/Types';
 
-const TeaRoundsTable = ({ teamId, refresh }) => {
-  const [selections, setSelections] = useState([]);
-  const [error, setError] = useState(null);
+interface TeaRoundsTableProps {
+  teamId: number | null;
+  refresh: boolean;
+}
+
+const TeaRoundsTable: React.FC<TeaRoundsTableProps> = ({ teamId, refresh }) => {
+  const [selections, setSelections] = useState<TeaRound[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchSelections = async () => {
+    const fetchSelections = async (): Promise<void> => {
       if (teamId) {
         try {
-          const response = await axios.get(`${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/previous-participant-selections`);
+          const response = await axios.get<TeaRoundsResponse>(
+            `${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/previous-participant-selections`
+          );
           setSelections(response.data);
         } catch (err) {
           setError('Error fetching previous selections.');
@@ -57,7 +65,7 @@ const TeaRoundsTable = ({ teamId, refresh }) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {selection.teaOrders.map((teaOrder) => (
+                      {selection.teaOrders?.map((teaOrder) => (
                         <tr key={teaOrder.id}>
                           <td>{teaOrder.participant.name}</td>
                           <td>{teaOrder.requestedTeaOrder || <small className="text-muted fst-italic">None Specified</small>}</td>
