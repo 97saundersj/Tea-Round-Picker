@@ -51,14 +51,13 @@ export const api = {
     );
   },
 
-  // Tea round related API calls
-  getRandomParticipant: async (teamId: number): Promise<string> => {
-    const response = await axios.get<string>(`${API_URL}/participant/${teamId}/random`);
+  getTeaRounds: async (teamId: number): Promise<TeaRound[]> => {
+    const response = await axios.get<TeaRound[]>(`${API_URL}/teaRounds/${teamId}`);
     return response.data;
   },
 
-  getPreviousTeaRounds: async (teamId: number): Promise<TeaRound[]> => {
-    const response = await axios.get<TeaRound[]>(`${API_URL}/teams/${teamId}/previous-participant-selections`);
+  addTeaRound: async (teamId: number): Promise<string> => {
+    const response = await axios.post<string>(`${API_URL}/teaRounds/${teamId}`);
     return response.data;
-  }
+  },
 }; 

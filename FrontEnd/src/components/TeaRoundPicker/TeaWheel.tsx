@@ -39,7 +39,7 @@ const TeaWheel: React.FC<TeaWheelProps> = ({
     if (!teamId || participants.length === 0) return;
     
     try {
-      const participantName = await api.getRandomParticipant(teamId);
+      const participantName = await api.addTeaRound(teamId);
       setSelectedParticipant(participantName);
       
       const index = participants.findIndex(p => p.name === participantName);

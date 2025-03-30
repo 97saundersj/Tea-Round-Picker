@@ -15,7 +15,7 @@ const TeaRoundsTable: React.FC<TeaRoundsTableProps> = ({ teamId, refresh }) => {
     const fetchSelections = async (): Promise<void> => {
       if (teamId) {
         try {
-          const response = await api.getPreviousTeaRounds(teamId);
+          const response = await api.getTeaRounds(teamId);
           setSelections(response);
         } catch (err) {
           setError('Error fetching previous selections.');

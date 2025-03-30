@@ -28,26 +28,8 @@ namespace TeaRoundPickerWebAPI.Controllers
             return Ok(team);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTeam(int id, Team team)
-        {
-            try
-            {
-                await _teamService.UpdateTeam(id, team);
-                return NoContent();
-            }
-            catch (ArgumentException)
-            {
-                return BadRequest();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-        }
-
         [HttpPost]
-        public async Task<ActionResult<Team>> PostTeam(CreateTeamDto createTeamDto)
+        public async Task<ActionResult<Team>> CreateTeam(CreateTeamDto createTeamDto)
         {
             try
             {
@@ -64,20 +46,6 @@ namespace TeaRoundPickerWebAPI.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTeam(int id)
-        {
-            try
-            {
-                await _teamService.DeleteTeam(id);
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-        }
-
         [HttpDelete("{teamId}/{participantId}")]
         public async Task<IActionResult> RemoveParticipant(int teamId, int participantId)
         {
@@ -90,13 +58,6 @@ namespace TeaRoundPickerWebAPI.Controllers
             {
                 return NotFound();
             }
-        }
-
-        [HttpGet("{teamId}/previous-participant-selections")]
-        public async Task<ActionResult<IEnumerable<TeaRound>>> GetPreviousParticipantSelections(int teamId)
-        {
-            var selections = await _teamService.GetTeaRounds(teamId);
-            return Ok(selections);
         }
     }
 }

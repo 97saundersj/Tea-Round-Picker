@@ -17,6 +17,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IParticipantService, ParticipantService>();
+builder.Services.AddScoped<ITeaRoundService, TeaRoundService>();
 
 // Add CORS services
 builder.Services.AddCors(options =>
