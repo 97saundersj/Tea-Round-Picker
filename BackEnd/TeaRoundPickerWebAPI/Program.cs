@@ -4,69 +4,77 @@ using TeaRoundPickerWebAPI.Models;
 using TeaRoundPickerWebAPI.Services;
 using TeaRoundPickerWebAPI.Services.Interfaces;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace TeaRoundPickerWebAPI;
 
-// Add services to the container.
-builder.Services.AddDbContext<TeaRoundPickerContext>(options => options.UseInMemoryDatabase("TeaRoundPickerDb"));
-
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-    });
-
-builder.Services.AddScoped<ITeamService, TeamService>();
-builder.Services.AddScoped<IParticipantService, ParticipantService>();
-builder.Services.AddScoped<ITeaRoundService, TeaRoundService>();
-
-// Add CORS services
-builder.Services.AddCors(options =>
+public class Program
 {
-    options.AddPolicy("AllowAllOrigins", builder =>
+    public static void Main(string[] args)
     {
-        builder.AllowAnyOrigin() // Allow any origin
-               .AllowAnyMethod() // Allow any HTTP method
-               .AllowAnyHeader(); // Allow any header
-    });
-});
+        var builder = WebApplication.CreateBuilder(args);
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+        // Add services to the container.
+        builder.Services.AddDbContext<TeaRoundPickerContext>(options => options.UseInMemoryDatabase("TeaRoundPickerDb"));
 
-var app = builder.Build();
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+            });
 
-// Configure the HTTP request pipeline.
-app.UseSwagger();
-app.UseSwaggerUI();
+        builder.Services.AddScoped<ITeamService, TeamService>();
+        builder.Services.AddScoped<IParticipantService, ParticipantService>();
+        builder.Services.AddScoped<ITeaRoundService, TeaRoundService>();
 
-app.UseHttpsRedirection();
+        // Add CORS services
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAllOrigins", builder =>
+            {
+                builder.AllowAnyOrigin() // Allow any origin
+                       .AllowAnyMethod() // Allow any HTTP method
+                       .AllowAnyHeader(); // Allow any header
+            });
+        });
 
-// Use CORS policy
-app.UseCors("AllowAllOrigins");
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
-app.UseAuthorization();
+        var app = builder.Build();
 
-// Seed data
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<TeaRoundPickerContext>();
-    SeedData(context);
-}
+        // Configure the HTTP request pipeline.
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
-app.MapControllers();
+        app.UseHttpsRedirection();
 
-app.Run();
+        // Use CORS policy
+        app.UseCors("AllowAllOrigins");
 
-static void SeedData(TeaRoundPickerContext context)
-{
-    if (!context.Teams.Any())
+        app.UseAuthorization();
+
+        // Seed data
+        using (var scope = app.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<TeaRoundPickerContext>();
+            SeedData(context);
+        }
+
+        app.MapControllers();
+
+        app.Run();
+    }
+
+    private static void SeedData(TeaRoundPickerContext context)
     {
-        context.Teams.AddRange(
-            new Team("Data", [new("Alice", "Normal"), new("Bob", "Milk No Sugar"), new("Charlie", "Milk 4 Sugars")]),
-            new Team("Dev", [new("David", "Green"), new("Eve", "Black"), new("Frank", "Herbal")]),
-            new Team("Ops", [new("George", "Oolong"), new("Harry", "Earl Grey"), new("Isabel", "Chai")])
-        );
-        context.SaveChanges();
+        if (!context.Teams.Any())
+        {
+            context.Teams.AddRange(
+                new Team("Data", [new("Alice", "Normal"), new("Bob", "Milk No Sugar"), new("Charlie", "Milk 4 Sugars")]),
+                new Team("Dev", [new("David", "Green"), new("Eve", "Black"), new("Frank", "Herbal")]),
+                new Team("Ops", [new("George", "Oolong"), new("Harry", "Earl Grey"), new("Isabel", "Chai")])
+            );
+            context.SaveChanges();
+        }
     }
 }

@@ -16,11 +16,11 @@ namespace TeaRoundPickerWebAPI.Services
                 .ToListAsync();
         }
 
-        public async Task<Team> GetTeam(int id)
+        public async Task<Team?> GetTeam(int id)
         {
             return await _context.Teams
                 .Include(t => t.Participants)
-                .FirstAsync(t => t.Id == id);
+                .FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task UpdateTeam(int id, Team team)

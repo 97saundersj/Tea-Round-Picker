@@ -7,7 +7,7 @@ namespace TeaRoundPickerWebAPI.Services.Interfaces
     {
         Task<IEnumerable<Team>> GetTeams();
 
-        Task<Team> GetTeam(int id);
+        Task<Team?> GetTeam(int id);
 
         Task UpdateTeam(int id, Team team);
 
