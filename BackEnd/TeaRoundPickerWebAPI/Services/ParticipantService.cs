@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TeaRoundPickerWebAPI.Data;
 using TeaRoundPickerWebAPI.Models;
+using TeaRoundPickerWebAPI.Services.Interfaces;
 
 namespace TeaRoundPickerWebAPI.Services
 {
@@ -29,22 +30,6 @@ namespace TeaRoundPickerWebAPI.Services
                 _context.Participants.Add(newParticipant);
 
                 team.Participants.Add(newParticipant);
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        public async Task RemoveParticipant(int teamId, string participantName)
-        {
-            var team = await _teamService.GetTeam(teamId);
-            if (team == null)
-            {
-                throw new KeyNotFoundException("Team not found.");
-            }
-
-            var existingParticipant = team.Participants.FirstOrDefault(p => p.Name == participantName);
-            if (existingParticipant != null)
-            {
-                team.Participants.Remove(existingParticipant);
                 await _context.SaveChangesAsync();
             }
         }

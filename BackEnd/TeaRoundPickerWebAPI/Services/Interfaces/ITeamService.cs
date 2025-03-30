@@ -1,7 +1,7 @@
 using TeaRoundPickerWebAPI.DTOs;
 using TeaRoundPickerWebAPI.Models;
 
-namespace TeaRoundPickerWebAPI.Services
+namespace TeaRoundPickerWebAPI.Services.Interfaces
 {
     public interface ITeamService
     {
@@ -14,6 +14,8 @@ namespace TeaRoundPickerWebAPI.Services
         Task<Team> CreateTeam(CreateTeamDto createTeamDto);
 
         Task DeleteTeam(int id);
+
+        Task RemoveParticipant(int teamId, int participantId);
 
         Task<IEnumerable<TeaRound>> GetTeaRounds(int teamId);
     }

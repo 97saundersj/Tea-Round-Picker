@@ -68,7 +68,7 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
     const participantToRemove = participants[index];
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_WEB_API_URL}/participant/${teamId}/${participantToRemove.name}`
+        `${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/${participantToRemove.id}`
       );
 
       if (response.status !== 204) {

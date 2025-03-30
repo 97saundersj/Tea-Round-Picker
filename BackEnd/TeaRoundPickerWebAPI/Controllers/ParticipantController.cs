@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using TeaRoundPickerWebAPI.Services;
+using TeaRoundPickerWebAPI.Services.Interfaces;
 
 namespace TeaRoundPickerWebAPI.Controllers
 {
@@ -20,20 +20,6 @@ namespace TeaRoundPickerWebAPI.Controllers
             try
             {
                 await _participantService.AddParticipant(teamId, participantName);
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-        }
-
-        [HttpDelete("{teamId}/{participantName}")]
-        public async Task<IActionResult> RemoveParticipant(int teamId, string participantName)
-        {
-            try
-            {
-                await _participantService.RemoveParticipant(teamId, participantName);
                 return NoContent();
             }
             catch (KeyNotFoundException)
