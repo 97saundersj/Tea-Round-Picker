@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TeaRoundPickerWebAPI.DTOs;
 using TeaRoundPickerWebAPI.Models;
-using TeaRoundPickerWebAPI.Services;
+using TeaRoundPickerWebAPI.Services.Interfaces;
 
 namespace TeaRoundPickerWebAPI.Controllers
 {
@@ -11,14 +11,12 @@ namespace TeaRoundPickerWebAPI.Controllers
     {
         private readonly ITeamService _teamService = teamService;
 
-        // GET: api/Teams
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
         {
             return Ok(await _teamService.GetTeams());
         }
 
-        // GET: api/Teams/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Team>> GetTeam(int id)
         {
@@ -30,28 +28,8 @@ namespace TeaRoundPickerWebAPI.Controllers
             return Ok(team);
         }
 
-        // PUT: api/Teams/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTeam(int id, Team team)
-        {
-            try
-            {
-                await _teamService.UpdateTeam(id, team);
-                return NoContent();
-            }
-            catch (ArgumentException)
-            {
-                return BadRequest();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-        }
-
-        // POST: api/Teams
         [HttpPost]
-        public async Task<ActionResult<Team>> PostTeam(CreateTeamDto createTeamDto)
+        public async Task<ActionResult<Team>> CreateTeam(CreateTeamDto createTeamDto)
         {
             try
             {
@@ -68,27 +46,18 @@ namespace TeaRoundPickerWebAPI.Controllers
             }
         }
 
-        // DELETE: api/Teams/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTeam(int id)
+        [HttpDelete("{teamId}/{participantId}")]
+        public async Task<IActionResult> RemoveParticipant(int teamId, int participantId)
         {
             try
             {
-                await _teamService.DeleteTeam(id);
+                await _teamService.RemoveParticipant(teamId, participantId);
                 return NoContent();
             }
             catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-        }
-
-        // GET: api/Teams/{teamId}/previous-participant-selections
-        [HttpGet("{teamId}/previous-participant-selections")]
-        public async Task<ActionResult<IEnumerable<TeaRound>>> GetPreviousParticipantSelections(int teamId)
-        {
-            var selections = await _teamService.GetPreviousParticipantSelectionsForTeam(teamId);
-            return Ok(selections);
         }
     }
 }

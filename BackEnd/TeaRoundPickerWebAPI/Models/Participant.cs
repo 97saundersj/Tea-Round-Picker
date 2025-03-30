@@ -1,11 +1,14 @@
 namespace TeaRoundPickerWebAPI.Models
 {
-    public class Participant(int id, string name, string preferredTea)
+    public class Participant(string name, string preferredTea)
     {
-        public int Id { get; set; } = id;
+        // Parameterless constructor for EF
+        private Participant() : this(string.Empty, string.Empty)
+        {
+        }
 
+        public int Id { get; set; }
         public string Name { get; set; } = name;
-
         public string PreferredTea { get; set; } = preferredTea;
     }
 } 

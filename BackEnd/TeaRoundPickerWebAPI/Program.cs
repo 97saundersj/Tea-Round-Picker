@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using TeaRoundPickerWebAPI.Data;
 using TeaRoundPickerWebAPI.Models;
 using TeaRoundPickerWebAPI.Services;
+using TeaRoundPickerWebAPI.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IParticipantService, ParticipantService>();
+builder.Services.AddScoped<ITeaRoundService, TeaRoundService>();
 
 // Add CORS services
 builder.Services.AddCors(options =>
@@ -58,28 +60,13 @@ app.Run();
 
 static void SeedData(TeaRoundPickerContext context)
 {
-    if (!context.Teams.Any()) // Check if data already exists
+    if (!context.Teams.Any())
     {
         context.Teams.AddRange(
-            new Team(1, "Data",
-            [
-                new(1, "Alice", "Normal"),
-                new(2, "Bob", "Milk No Sugar"),
-                new(3, "Charlie", "Milk No Sugar")
-            ]),
-            new Team(2, "Dev",
-            [
-                new(4, "David", "Green"),
-                new(5, "Eve", "Black"),
-                new(6, "Frank", "Herbal")
-            ]),
-            new Team(3, "Ops",
-            [
-                new(7, "George", "Oolong"),
-                new(8, "Harry", "Earl Grey"),
-                new(9, "Isabel", "Chai")
-            ])
+            new Team("Data", [new("Alice", "Normal"), new("Bob", "Milk No Sugar"), new("Charlie", "Milk 4 Sugars")]),
+            new Team("Dev", [new("David", "Green"), new("Eve", "Black"), new("Frank", "Herbal")]),
+            new Team("Ops", [new("George", "Oolong"), new("Harry", "Earl Grey"), new("Isabel", "Chai")])
         );
-        context.SaveChanges(); // Save changes to the in-memory database
+        context.SaveChanges();
     }
 }

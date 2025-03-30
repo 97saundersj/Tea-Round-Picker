@@ -8,7 +8,7 @@ import Navbar from './components/Navbar';
 import About from './components/About';
 import TeaRoundPicker from './components/TeaRoundPicker/TeaRoundPicker';
 
-const App = () => {
+const App: React.FC = () => {
   return (
     <Router>
       <div>
@@ -22,4 +22,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default App; 

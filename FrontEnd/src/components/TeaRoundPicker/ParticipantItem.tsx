@@ -1,14 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
+import { Participant } from '../../types/Types';
 
-const ParticipantItem = ({ participant, index, handlePreferredTeaChange, handleRemoveParticipant }) => {
-  const [inputValue, setInputValue] = useState(participant.preferredTea);
+interface ParticipantItemProps {
+  participant: Participant;
+  index: number;
+  handlePreferredTeaChange: (id: number, newTea: string) => Promise<void>;
+  handleRemoveParticipant: (index: number) => Promise<void>;
+}
 
-  const handleTeaChange = (e) => {
+const ParticipantItem: React.FC<ParticipantItemProps> = ({ 
+  participant, 
+  index, 
+  handlePreferredTeaChange, 
+  handleRemoveParticipant 
+}) => {
+  const [inputValue, setInputValue] = useState<string>(participant.preferredTea || '');
+
+  const handleTeaChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setInputValue(e.target.value);
   };
 
-  const handleBlur = () => {
-    handlePreferredTeaChange(index, inputValue);
+  const handleBlur = (): void => {
+    handlePreferredTeaChange(participant.id, inputValue);
   };
 
   return (

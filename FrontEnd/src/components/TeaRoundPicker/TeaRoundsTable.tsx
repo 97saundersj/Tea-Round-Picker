@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { TeaRound } from '../../types/Types';
+import { api } from '../../services/api';
 
-const TeaRoundsTable = ({ teamId, refresh }) => {
-  const [selections, setSelections] = useState([]);
-  const [error, setError] = useState(null);
+interface TeaRoundsTableProps {
+  teamId: number | null;
+  refresh: boolean;
+}
+
+const TeaRoundsTable: React.FC<TeaRoundsTableProps> = ({ teamId, refresh }) => {
+  const [selections, setSelections] = useState<TeaRound[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchSelections = async () => {
+    const fetchSelections = async (): Promise<void> => {
       if (teamId) {
         try {
-          const response = await axios.get(`${process.env.REACT_APP_WEB_API_URL}/teams/${teamId}/previous-participant-selections`);
-          setSelections(response.data);
+          const response = await api.getTeaRounds(teamId);
+          setSelections(response);
         } catch (err) {
           setError('Error fetching previous selections.');
         }
@@ -39,7 +45,7 @@ const TeaRoundsTable = ({ teamId, refresh }) => {
                   aria-controls={`collapse${index}`}
                 >
                   <b>
-                    {new Intl.DateTimeFormat('en-UK', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(selection.date))} - {selection.chosenParticipant} made tea
+                    {new Intl.DateTimeFormat('en-UK', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(selection.date))} - {selection.chosenParticipant.name} made tea
                   </b>
                 </button>
               </h2>
@@ -57,10 +63,10 @@ const TeaRoundsTable = ({ teamId, refresh }) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {selection.teaOrders.map((teaOrder) => (
+                      {selection.teaOrders?.map((teaOrder) => (
                         <tr key={teaOrder.id}>
-                          <td>{teaOrder.participantName}</td>
-                          <td>{teaOrder.preferredTeaOrder || <small className="text-muted fst-italic">None Specified</small>}</td>
+                          <td>{teaOrder.participant.name}</td>
+                          <td>{teaOrder.requestedTeaOrder || <small className="text-muted fst-italic">None Specified</small>}</td>
                         </tr>
                       ))}
                     </tbody>

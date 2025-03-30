@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using TeaRoundPickerWebAPI.Data;
 using TeaRoundPickerWebAPI.DTOs;
 using TeaRoundPickerWebAPI.Models;
+using TeaRoundPickerWebAPI.Services.Interfaces;
 
 namespace TeaRoundPickerWebAPI.Services
 {
@@ -12,7 +13,6 @@ namespace TeaRoundPickerWebAPI.Services
         public async Task<IEnumerable<Team>> GetTeams()
         {
             return await _context.Teams
-                .Include(t => t.Participants)
                 .ToListAsync();
         }
 
@@ -56,7 +56,7 @@ namespace TeaRoundPickerWebAPI.Services
                 throw new ArgumentException("Team name is required.");
             }
 
-            var team = new Team(0, createTeamDto.Label, []);
+            var team = new Team(createTeamDto.Label, []);
 
             _context.Teams.Add(team);
             try
@@ -90,11 +90,24 @@ namespace TeaRoundPickerWebAPI.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<TeaRound>> GetPreviousParticipantSelectionsForTeam(int teamId)
+        public async Task RemoveParticipant(int teamId, int participantId)
+        {
+            var team = await GetTeam(teamId);
+
+            var participant = team.Participants.FirstOrDefault(p => p.Id == participantId);
+            if (participant != null)
+            {
+                team.Participants.Remove(participant);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<TeaRound>> GetTeaRounds(int teamId)
         {
             return await _context.TeaRounds
                 .Where(entry => entry.TeamId == teamId)
-                .Include(t => t.TeaOrders)
+                .Include(t => t.TeaOrders).ThenInclude(t => t.Participant)
+                .Include(t => t.ChosenParticipant)
                 .ToListAsync();
         }
 

@@ -1,20 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
-using TeaRoundPickerWebAPI.Services;
+using TeaRoundPickerWebAPI.Services.Interfaces;
 
 namespace TeaRoundPickerWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ParticipantController : ControllerBase
+    public class ParticipantController(IParticipantService participantService) : ControllerBase
     {
-        private readonly IParticipantService _participantService;
+        private readonly IParticipantService _participantService = participantService;
 
-        public ParticipantController(IParticipantService participantService)
-        {
-            _participantService = participantService;
-        }
-
-        // POST: api/Participant/{teamId}
         [HttpPost("{teamId}")]
         public async Task<IActionResult> AddParticipant(int teamId, [FromBody] string participantName)
         {
@@ -29,43 +23,12 @@ namespace TeaRoundPickerWebAPI.Controllers
             }
         }
 
-        // DELETE: api/Participant/{teamId}/{participantName}
-        [HttpDelete("{teamId}/{participantName}")]
-        public async Task<IActionResult> RemoveParticipant(int teamId, string participantName)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditParticipant(int id, [FromBody] string preferredTea)
         {
             try
             {
-                await _participantService.RemoveParticipant(teamId, participantName);
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-        }
-
-        // GET: api/Participant/{teamId}/random
-        [HttpGet("{teamId}/random")]
-        public async Task<ActionResult<string>> GetRandomParticipant(int teamId)
-        {
-            try
-            {
-                var participant = await _participantService.GetRandomParticipant(teamId);
-                return Ok(participant);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-        }
-
-        // PUT: api/Participant/{teamId}/{oldParticipantName}
-        [HttpPut("{teamId}/{oldParticipantName}")]
-        public async Task<IActionResult> EditParticipant(int teamId, string oldParticipantName, [FromBody] string preferredTea)
-        {
-            try
-            {
-                await _participantService.EditParticipant(teamId, oldParticipantName, preferredTea);
+                await _participantService.EditParticipant(id, preferredTea);
                 return NoContent();
             }
             catch (KeyNotFoundException)
