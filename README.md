@@ -18,6 +18,12 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 Launches the test runner in the interactive watch mode.\
 
+
+
 ## Backend [![Build & deploy Backend](https://github.com/97saundersj/Tea-Round-Picker/actions/workflows/master_tearoundpickerwebapi.yml/badge.svg)](https://github.com/97saundersj/Tea-Round-Picker/actions/workflows/buildTestDeploy-backend.yml)
 
 [Web API Swagger Page](https://tearoundpickerwebapi.azurewebsites.net/swagger)
+
+### Architecture Decision Records
+
+For detailed information about the technology stack used in this project, please refer to the [Technology Stack ADR](docs/ADRs/ADR-001-Technology-Stack.md).
