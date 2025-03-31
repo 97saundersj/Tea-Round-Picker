@@ -28,7 +28,7 @@ jobs:
         run: dotnet build BackEnd/TeaRoundPickerWebAPI/TeaRoundPickerWebAPI.sln --configuration Release
 
       - name: Run Integration Tests
-        run: dotnet test BackEnd/TeaRoundPickerWebAPI.IntegrationTests/TeaRoundPickerWebAPI.IntegrationTests.csproj --configuration Release --verbosity normal
+        run: dotnet test BackEnd/TeaRoundPickerWebAPI.IntegrationTests/TeaRoundPickerWebAPI.Tests.csproj --configuration Release --verbosity normal
 
   build:
     runs-on: windows-latest
