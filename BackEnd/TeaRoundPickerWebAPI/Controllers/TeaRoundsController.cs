@@ -18,12 +18,12 @@ namespace TeaRoundPickerWebAPI.Controllers
         }
 
         [HttpPost("{teamId}")]
-        public async Task<ActionResult<string>> AddTeaRound(int teamId)
+        public async Task<ActionResult<int>> AddTeaRound(int teamId)
         {
             try
             {
-                var participant = await _teaRoundService.AddTeaRound(teamId);
-                return Ok(participant);
+                var participantId = await _teaRoundService.AddTeaRound(teamId);
+                return Ok(participantId);
             }
             catch (KeyNotFoundException)
             {

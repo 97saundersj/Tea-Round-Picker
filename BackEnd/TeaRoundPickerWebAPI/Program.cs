@@ -57,24 +57,11 @@ public class Program
         using (var scope = app.Services.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<TeaRoundPickerContext>();
-            SeedData(context);
+            DataSeeder.SeedData(context);
         }
 
         app.MapControllers();
 
         app.Run();
-    }
-
-    private static void SeedData(TeaRoundPickerContext context)
-    {
-        if (!context.Teams.Any())
-        {
-            context.Teams.AddRange(
-                new Team("Data", [new("Alice", "Normal"), new("Bob", "Milk No Sugar"), new("Charlie", "Milk 4 Sugars")]),
-                new Team("Dev", [new("David", "Green"), new("Eve", "Black"), new("Frank", "Herbal")]),
-                new Team("Ops", [new("George", "Oolong"), new("Harry", "Earl Grey"), new("Isabel", "Chai")])
-            );
-            context.SaveChanges();
-        }
     }
 }

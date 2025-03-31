@@ -5,10 +5,9 @@ using TeaRoundPickerWebAPI.Services.Interfaces;
 
 namespace TeaRoundPickerWebAPI.Services
 {
-    public class TeaRoundService(TeaRoundPickerContext context, ITeamService teamService) : ITeaRoundService
+    public class TeaRoundService(TeaRoundPickerContext context) : ITeaRoundService
     {
         private readonly TeaRoundPickerContext _context = context;
-        private readonly ITeamService _teamService = teamService;
 
         public async Task<IEnumerable<TeaRound>> GetTeaRounds(int teamId)
         {
@@ -19,13 +18,14 @@ namespace TeaRoundPickerWebAPI.Services
                 .ToListAsync();
         }
 
-        public async Task<string> AddTeaRound(int teamId)
+        public async Task<int> AddTeaRound(int teamId)
         {
-            var team = await _teamService.GetTeam(teamId);
-            if (team == null || !team.Participants.Any())
-            {
-                throw new KeyNotFoundException("Team not found or has no participants.");
-            }
+            var team = await _context.Teams
+                .Include(t => t.Participants)
+                .FirstOrDefaultAsync(t => t.Id == teamId);
+
+            if (team == null) throw new KeyNotFoundException("Team not found.");
+            if (team.Participants.Count == 0) throw new KeyNotFoundException("Team has no participants.");
 
             var random = new Random();
             int index = random.Next(team.Participants.Count);
@@ -44,7 +44,7 @@ namespace TeaRoundPickerWebAPI.Services
             _context.TeaRounds.Add(teaRound);
             await _context.SaveChangesAsync();
 
-            return selectedParticipant.Name;
+            return selectedParticipant.Id;
         }
     }
 } 

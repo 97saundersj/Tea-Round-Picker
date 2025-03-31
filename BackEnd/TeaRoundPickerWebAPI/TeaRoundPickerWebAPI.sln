@@ -5,7 +5,7 @@ VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeaRoundPickerWebAPI", "TeaRoundPickerWebAPI.csproj", "{4981A51B-3911-4595-B5BD-7E58E75654BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeaRoundPickerWebAPI.IntegrationTests", "..\TeaRoundPickerWebAPI.IntegrationTests\TeaRoundPickerWebAPI.IntegrationTests.csproj", "{F80B257B-9C88-1BDD-3966-48F87B10E787}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeaRoundPickerWebAPI.Tests", "..\TeaRoundPickerWebAPI.Tests\TeaRoundPickerWebAPI.Tests.csproj", "{895DF326-B7A1-3425-6DD3-92676F8252CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{4981A51B-3911-4595-B5BD-7E58E75654BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4981A51B-3911-4595-B5BD-7E58E75654BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4981A51B-3911-4595-B5BD-7E58E75654BF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F80B257B-9C88-1BDD-3966-48F87B10E787}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F80B257B-9C88-1BDD-3966-48F87B10E787}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F80B257B-9C88-1BDD-3966-48F87B10E787}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F80B257B-9C88-1BDD-3966-48F87B10E787}.Release|Any CPU.Build.0 = Release|Any CPU
+		{895DF326-B7A1-3425-6DD3-92676F8252CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{895DF326-B7A1-3425-6DD3-92676F8252CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{895DF326-B7A1-3425-6DD3-92676F8252CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{895DF326-B7A1-3425-6DD3-92676F8252CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
