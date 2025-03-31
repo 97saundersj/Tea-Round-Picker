@@ -9,8 +9,8 @@ const About = () => {
           <Card>
             <Card.Body>
               <Card.Title className="text-center">About</Card.Title>
-              <Card.Text>
-                TODO: link github
+              <Card.Text className="text-center">
+                Check out the project on <a href="https://github.com/97saundersj/Tea-Round-Picker" target="_blank" rel="noopener noreferrer">GitHub</a>.
               </Card.Text>
             </Card.Body>
           </Card>
@@ -20,4 +20,4 @@ const About = () => {
   );
 };
 
-export default About; 
+export default About;
