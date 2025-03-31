@@ -1,75 +1,72 @@
-# Architecture Decision Record (ADR) – ADR-001
+# Architecture Decision Record (ADR-001)
 
-## Title: Technology Stack & Deployment Decisions for Nisien Tea Round Picker
+## Title: Technology Stack & Deployment for Nisien Tea Round Picker
 
 ### Context
-The Nisien Tea Round Picker is a productivity tool designed to facilitate fair tea selection in an office setting. The application will:
-- Provide a user-friendly interface for managing teams, participants, and viewing selection results.
-- Select a tea maker randomly.
-- Include features for saving and retrieving past selections for transparency.
+Nisien Tea Round Picker is a productivity tool designed to facilitate fair selection for choosing who should make tea for their team in the office. It will:
+- Provide an intuitive interface for managing teams and participants.
+- Randomly select a tea maker to make tea for the team.
+- Record historical tea rounds and the tea orders made by participants.
+- Allow for mobile support, meaning that users can easily choose who should make tea from anywhere in the office.
 
-The project consists of two primary components:
-- **Frontend:** A React web application built with TypeScript.
-- **Backend:** A .NET Web API built using C#.
+The application consists of two main components:
+- **Frontend:** A React web application with TypeScript.
+- **Backend:** An ASP.NET Core Web API in C#.
 
-The application is deployed to Azure, with the frontend hosted on Azure Static Web Apps and the backend on Azure App Service. The repository is organized with separate `FrontEnd` and `BackEnd` directories for clear separation of client and server code.
+The project is organized into separate FrontEnd and BackEnd directories and is deployed on Azure, with the frontend hosted on Azure Static Web Apps and the backend on Azure App Service.
 
 ### Decision
-I have chosen the following technology stack and deployment strategy:
+The following technology stack and deployment approach have been chosen:
 - **Frontend:** React with TypeScript
 - **Backend:** ASP.NET Core Web API (C#)
-- **Database:** Entity Framework (EF) with an in-memory database during development - EF will allow me to easily expand the project to a persistent database (e.g., Azure SQL Database) at a later time.
+- **Database:** Entity Framework (EF) using an in-memory database during development.
 - **Hosting/Deployment:**
-  - **Frontend:** Azure Static Web Apps
-  - **Backend:** Azure App Service
-- **Repository Structure:** The codebase is divided into `FrontEnd` and `BackEnd` directories for clear organization.
+  - **Frontend:** Azure Static Web Apps.
+  - **Backend:** Azure App Service.
+- **CI/CD:** Automated deployment via GitHub Actions.
+- **Repository Structure:** Separate directories for `FrontEnd` and `BackEnd` ensure clear code boundaries.
 
 ### Rationale
 
 #### **Frontend – React with TypeScript**
-- **React:** A modern, widely-used JavaScript framework that enables dynamic, responsive UIs with reusable components.
-- **TypeScript:** Adds static typing to JavaScript, enhancing developer experience and reducing runtime errors.
-- **Benefits:**
-  - Encourages modularity and component-based architecture.
-  - React's strong ecosystem and library support (e.g., React Bootstrap) speed up UI development.
-  - Easy integration with backend REST APIs.
+- **React:** A popular library for building dynamic user interfaces with reusable components. I wanted to use React to gain experience with it, as it is a widely popular framework with extensive support available.
+- **TypeScript:** Provides static typing to improve code quality and reduce runtime errors.
+- **Styling:** I will be relying on Bootstrap for styling since it makes it easy to create a good-looking website with minimal effort and provides built-in mobile support.
+- **Past Experience:** I have no direct experience with React but I have experience with other reactivie javascript frameworks such as vue.js I wanted to use React to see how it compares to other frameworks and to gain experience with it.
+- **Key Benefits:** Promotes a modular architecture through the use of components, making it easy to quickly update and modify the project. It also speeds up development with a rich ecosystem of pre-made components and allows for easy integration with REST APIs.
 
 #### **Backend – ASP.NET Core Web API (C#)**
-- **ASP.NET Core:** A robust, scalable framework for building secure, high-performance APIs.
-- **C#:** The language of choice for backend development, providing strong tooling, support for asynchronous operations, and integrated testing capabilities.
-- **Benefits:**
-  - Well-suited for building RESTful APIs with clear separation between data access and business logic.
-  - Built-in security features such as authentication and authorization.
-  - Excellent tooling and debugging support in the .NET ecosystem.
-  - Capable of handling complex algorithms for selection logic.
+- **ASP.NET Core:** A proven framework for secure, high-performance APIs.
+- **C#:** Offers robust tooling, asynchronous support, and strong testing capabilities.
+- **Past Experience:** I have plenty of experience in developing web APIs with this framework.
+- **Key Benefits:** Enables clear separation of business logic and data access while seamlessly integrating with databases. 
 
-#### **Hosting/Deployment on Azure**
-- **Frontend:** Hosted on Azure Static Web Apps for simple deployment and global distribution.
-- **Backend:** Deployed via Azure App Service, providing scalability and reliability for the API.
-- **CI/CD:** Azure supports continuous integration and deployment through GitHub Actions, ensuring smooth and automated deployments.
+#### **Azure Hosting & CI/CD**
+- **Deployment:** Azure Static Web Apps and Azure App Service provide easily hosting, with plenty of options for scalability.
+- **CI/CD:** GitHub Actions streamline continuous integration and deployment reducing manual overhead for deployment and easily integrates with Azure services.
 
 #### **Repository Structure**
-- **FrontEnd and BackEnd Directories:** Code is separated into distinct directories to maintain clear boundaries between client and server code.
-- **Modular Design:** This structure allows easy maintenance and scalability of both frontend and backend components.
+- **Separation of Concerns:** Distinct directories for frontend and backend promote maintainability and collaboration.
 
 ### Consequences
 
 #### **Positive Outcomes:**
-- **Modern, Scalable Architecture:** The chosen stack aligns with current development best practices, providing a foundation that can scale as new features are added.
-- **Clear Separation of Concerns:** Keeping frontend and backend in separate directories simplifies the development process and makes the project easier to maintain.
-- **Cloud-Readiness:** Hosting the app on Azure ensures scalability, high availability, and ease of management through cloud-native services.
-- **Developer Experience:** TypeScript adds static typing to JavaScript, improving code quality and reducing errors. Swagger documentation helps developers understand and interact with the backend API more easily.
+- **Scalable Architecture:** The chosen stack supports growth and future enhancements.
+- **Efficient Development:** Clear code separation and robust tooling enhance developer productivity.
+- **Cloud-Ready:** Azure's services offer scalability, reliability, and ease of management.
+- **Improved Developer Experience:** Static typing and comprehensive API documentation (via Swagger) to provide clarity to data structures and clearly illustrate how the front and back ends connect.
 
 #### **Challenges:**
-- **Initial Setup Complexity:** Setting up Azure services and configuring the .NET backend for production deployment may require additional setup time.
-- **Database Integration:** If persistent storage is needed in future versions (e.g., to store preferences or analytics), integrating a database like PostgreSQL may add complexity.
-- **Learning Curve:** Developers unfamiliar with TypeScript or the .NET ecosystem might face a learning curve, although the strong documentation and community support mitigate this.
+- **Initial Setup:** Configuring Azure services will require additional effort.
+- **Database Transition:** Migrating from an in-memory database to a persistent one at a later date could cause issues and will require additional thoughts for schema changes and migration processes.
+- **Learning Curve:** I will need to familiarize myself with React so I will have to rely on the existing extensive documentation and community support.
 
-### Alternatives considered
+### Alternatives Considered
 
 1. **Vue.js Frontend**
-   - *Pros:* I have past experience developing with Vue.js, which could lead to faster development and a more intuitive design process.
-   - *Cons:* While Vue.js is a powerful framework, I have always wanted to use React to build a web app so I thought this was a good opertunity to learn and challange myself, especially since React is the framework used by Nisien, meaning that it should be easier for them to review and to (hopefully) discuss during the interview process.
+   - **Pros:** Familiarity with Vue.js could accelerate development.
+   - **Cons:** Using React aligns with Nisien's preferred framework, aiding review and interview discussions while providing a professional growth opportunity.
 
 ### Decision Status
-**Accepted** – The current stack and deployment strategy using React with TypeScript for the frontend and ASP.NET Core Web API (C#) for the backend, hosted on Azure, will be maintained. Future iterations may include persistent storage solutions or additional features like fairness analytics or notifications.
+**Accepted** – The selected technology stack and deployment strategy, utilizing React with TypeScript and ASP.NET Core Web API (C#) hosted on Azure will be used for the initial implimentation of this project. Future iterations may incorporate persistent storage, enhanced analytics, and additional features such as notifications.
+
