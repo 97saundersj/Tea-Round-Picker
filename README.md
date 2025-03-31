@@ -7,10 +7,9 @@ This repository hosts the Back End and Front End code for a web application desi
 
 ### Running the Frontend Project
 
-**Navigate to the Frontend Directory:**
-   Change into the `FrontEnd` directory:
-   ```
-   cd Tea-Round-Picker/FrontEnd
+**Open the Solution in VS Code:**
+1. Launch VS Code.
+2. Open the solution file located in the `Frontend` directory.
    ```
 
 **Install Dependencies:**
