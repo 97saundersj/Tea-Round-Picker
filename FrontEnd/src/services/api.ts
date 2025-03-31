@@ -69,10 +69,10 @@ export const api = {
     await axios.delete(`${API_URL}/teams/${teamId}/${participantId}`);
   },
 
-  updatePreferredTea: async (participantId: number, preferredTea: string): Promise<void> => {
-    await axios.put(
-      `${API_URL}/participant/${participantId}`,
-      preferredTea,
+  updateParticipant: async (participant: Participant): Promise<void> => {
+    await axios.put<Participant>(
+      `${API_URL}/participant/${participant.id}`,
+      participant,
       {
         headers: {
           'Content-Type': 'application/json',

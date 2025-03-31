@@ -76,18 +76,25 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
   const handlePreferredTeaChange = async (id: number | null | undefined, newTea: string): Promise<void> => {
     try {
       if (!id) throw new Error("Participant invalid");
-
-      await api.updatePreferredTea(id, newTea);
-
+  
+      // Fetch the participant to update
+      const participantToUpdate = participants.find(participant => participant.id === id);
+      if (!participantToUpdate) throw new Error("Participant not found");
+  
+      // Update the preferredTea property
+      const updatedParticipant = { ...participantToUpdate, preferredTea: newTea };
+  
+      await api.updateParticipant(updatedParticipant); // Pass the entire participant object
+  
       setParticipants(participants.map((participant) =>
-        participant.id === id ? { ...participant, preferredTea: newTea } : participant
+        participant.id === id ? updatedParticipant : participant
       ));
-
+  
     } catch (error) {
       console.error("Error updating preferred tea:", error);
       toast.error('Error updating preferred tea. Please try again.');
     }
-  };
+  }; 
 
   if (!teamId) {
     return null;
