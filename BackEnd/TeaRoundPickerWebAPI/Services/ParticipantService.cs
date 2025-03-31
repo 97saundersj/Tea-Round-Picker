@@ -33,7 +33,7 @@ namespace TeaRoundPickerWebAPI.Services
             if (existingParticipant == null) throw new KeyNotFoundException("Participant not found.");
 
             existingParticipant.Name = participant.Name;
-            existingParticipant.PreferredTea = existingParticipant.PreferredTea;
+            existingParticipant.PreferredTea = participant.PreferredTea;
 
             await _context.SaveChangesAsync();
         }

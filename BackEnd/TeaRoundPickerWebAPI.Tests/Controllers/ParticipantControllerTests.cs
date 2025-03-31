@@ -98,24 +98,26 @@ namespace TeaRoundPickerWebAPI.Tests.Controllers
         public async Task EditParticipant_WhenValidUpdate_ReturnsNoContent()
         {
             // Arrange
-            var participant = new Participant("John Smith", "Black Tea");
-            await Context.Participants.AddAsync(participant);
+            var existingParticipant = new Participant("John Smith", "Black Tea");
+            await Context.Participants.AddAsync(existingParticipant);
             await Context.SaveChangesAsync();
 
-            participant.Name = "John Earl Smith";
-            participant.PreferredTea = "Earl Grey";
+            var updatedParticipent = new Participant("John Earl Smith", "Earl Grey")
+            {
+                Id = existingParticipant.Id
+            };
 
             // Act
-            var result = await _controller.EditParticipant(participant);
+            var result = await _controller.EditParticipant(updatedParticipent);
 
             // Assert
             result.Should().BeOfType<NoContentResult>();
 
             // Verify the participant was actually updated in the database
-            var updatedParticipant = await Context.Participants.FindAsync(participant.Id);
+            var updatedParticipant = await Context.Participants.FindAsync(existingParticipant.Id);
             updatedParticipant.Should().NotBeNull();
-            updatedParticipant.Name.Should().Be(participant.Name);
-            updatedParticipant.PreferredTea.Should().Be(participant.PreferredTea);
+            updatedParticipant.Name.Should().Be(updatedParticipent.Name);
+            updatedParticipant.PreferredTea.Should().Be(updatedParticipent.PreferredTea);
         }
 
         [Fact]

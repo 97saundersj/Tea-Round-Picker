@@ -5,24 +5,50 @@ This repository hosts the Back End and Front End code for a web application desi
 
 [React Web App](https://orange-dune-0b0970310.6.azurestaticapps.net/#/)
 
-### Available Scripts
+### Running the Frontend Project
 
-In the project directory, you can run:
+**Open the Solution in VS Code:**
+1. Launch VS Code.
+2. Open the solution file located in the `Frontend` directory.
+   ```
 
-### `npm start`
+**Install Dependencies:**
+   Make sure you have [Node.js](https://nodejs.org/) installed. Then run:
+   ```
+   npm install
+   ```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Start the Development Server:**
+   ```
+   npm start
+   ```
 
-### `npm test`
+### Running Tests
 
-Launches the test runner in the interactive watch mode.\
-
-
+**Run Tests:**
+   To execute tests, use:
+   ```
+   npm test
+   ```
 
 ## Backend [![Build & deploy Backend](https://github.com/97saundersj/Tea-Round-Picker/actions/workflows/buildTestDeploy-backend.yml/badge.svg)](https://github.com/97saundersj/Tea-Round-Picker/actions/workflows/buildTestDeploy-backend.yml)
 
-[Web API Swagger Page](https://tearoundpickerwebapi.azurewebsites.net/swagger)
+### Running the Backend Project
+
+**Open the Solution in Visual Studio:**
+1. Launch Visual Studio.
+2. Open the solution file located in the `BackEnd` directory.
+
+**Set the Startup Project:**
+- Right-click on the `TeaRoundPickerWebAPI` project in the Solution Explorer and select "Set as StartUp Project".
+
+**Run the Project:**
+- Press `F5` or click on the "Start" button to run the project. This will start the web API.
+
+### Running Tests
+To execute tests for the Back End:
+1. Open the `TeaRoundPickerWebAPI.Tests` project in Solution Explorer.
+2. Right-click on the project and select "Run Tests" or use the Test Explorer to run all tests.
 
 ### Architecture Decision Records
 

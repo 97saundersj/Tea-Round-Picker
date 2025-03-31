@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using TeaRoundPickerWebAPI.Data;
-using TeaRoundPickerWebAPI.Models;
 using TeaRoundPickerWebAPI.Services;
 using TeaRoundPickerWebAPI.Services.Interfaces;
 
