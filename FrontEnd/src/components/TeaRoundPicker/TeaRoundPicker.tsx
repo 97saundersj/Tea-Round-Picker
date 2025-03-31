@@ -51,7 +51,6 @@ const TeaRoundPicker: React.FC = () => {
   }, []);
 
   const pickedTeaMaker = (): void => {
-    // Your logic for picking a tea goes here
     setRefetchPreviousSelections(prev => !prev);
   };
 
