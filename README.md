@@ -1,7 +1,7 @@
 # Tea Round Picker 
 This repository hosts the Back End and Front End code for a web application designed to fairly decide who makes the next round of tea in the office.
 
-## Frontend [![Build & deploy Frontend](https://github.com/97saundersj/Tea-Round-Picker/actions/workflows/azure-static-web-apps-orange-dune-0b0970310.yml/badge.svg)](https://github.com/97saundersj/Tea-Round-Picker/actions/workflows/buildDeploy-frontend.yml)
+## Frontend [![Build & deploy Frontend](https://github.com/97saundersj/Tea-Round-Picker/actions/workflows/buildDeploy-frontend.yml/badge.svg)](https://github.com/97saundersj/Tea-Round-Picker/actions/workflows/buildDeploy-frontend.yml)
 
 [React Web App](https://orange-dune-0b0970310.6.azurestaticapps.net/#/)
 
@@ -20,7 +20,7 @@ Launches the test runner in the interactive watch mode.\
 
 
 
-## Backend [![Build & deploy Backend](https://github.com/97saundersj/Tea-Round-Picker/actions/workflows/master_tearoundpickerwebapi.yml/badge.svg)](https://github.com/97saundersj/Tea-Round-Picker/actions/workflows/buildTestDeploy-backend.yml)
+## Backend [![Build & deploy Backend](https://github.com/97saundersj/Tea-Round-Picker/actions/workflows/buildTestDeploy-backend.yml/badge.svg)](https://github.com/97saundersj/Tea-Round-Picker/actions/workflows/buildTestDeploy-backend.yml)
 
 [Web API Swagger Page](https://tearoundpickerwebapi.azurewebsites.net/swagger)
 
