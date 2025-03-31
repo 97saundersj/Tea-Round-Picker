@@ -1,7 +1,8 @@
 import React, { useState, FormEvent } from 'react';
 import ParticipantItem from './ParticipantItem';
-import { Participant, Team } from '../../types/Types';
+import { Participant } from '../../types/Types';
 import { api } from '../../services/api';
+import { toast } from 'react-toastify';
 
 interface ParticipantsListProps {
   participants: Participant[];
@@ -17,16 +18,24 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
   onParticipantAdded 
 }) => {
   const [newParticipant, setNewParticipant] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const addParticipantToAPI = async (participantName: string): Promise<void> => {
     if (!teamId) return;
     
+    var participant: Participant = {
+      id: 0,
+      name: participantName,
+      teamId: teamId,
+      preferredTea: "",
+    }
+
     try {
-      await api.addParticipant(teamId, participantName);
+      const createdParticipant = await api.createParticipant(participant);
+      if (!createdParticipant || !createdParticipant.id) throw new Error("Participant invalid");
+      await api.addParticipantToTeamById(teamId, createdParticipant.id);
     } catch (error) {
       console.error("Error adding participant:", error);
-      setErrorMessage('Error adding participant. Please try again.');
+      toast.error('Error adding participant. Please try again.');
     }
   };
 
@@ -36,16 +45,15 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
     
     if (trimmedName && !participants.some(p => p.name === trimmedName)) {
       await addParticipantToAPI(trimmedName);
-      const newParticipantObj: Participant = {
-        id: 0, // This will be set by the server
+
+      const newParticipant: Participant = {
         teamId: teamId!,
         name: trimmedName,
         preferredTea: null,
-        team: {} as Team // This will be populated by the server
       };
-      setParticipants([...participants, newParticipantObj]);
+
+      setParticipants([...participants, newParticipant]);
       setNewParticipant('');
-      setErrorMessage('');
       onParticipantAdded();
     }
   };
@@ -54,24 +62,30 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
     if (!teamId) return;
     
     const participantToRemove = participants[index];
+    if (!participantToRemove || !participantToRemove.id) return;
+
     try {
       await api.removeParticipant(teamId, participantToRemove.id);
       setParticipants(participants.filter((_, i) => i !== index));
     } catch (error) {
       console.error("Error removing participant:", error);
-      setErrorMessage('Error removing participant. Please try again.');
+      toast.error('Error removing participant. Please try again.');
     }
   };
 
-  const handlePreferredTeaChange = async (id: number, newTea: string): Promise<void> => {
+  const handlePreferredTeaChange = async (id: number | null | undefined, newTea: string): Promise<void> => {
     try {
+      if (!id) throw new Error("Participant invalid");
+
       await api.updatePreferredTea(id, newTea);
+
       setParticipants(participants.map((participant) =>
         participant.id === id ? { ...participant, preferredTea: newTea } : participant
       ));
+
     } catch (error) {
       console.error("Error updating preferred tea:", error);
-      setErrorMessage('Error updating preferred tea. Please try again.');
+      toast.error('Error updating preferred tea. Please try again.');
     }
   };
 
@@ -95,7 +109,7 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
             <button type="submit" className="btn btn-primary">Add</button>
           </div>
         </form>
-        {errorMessage && <div className="text-danger">{errorMessage}</div>}
+
         <h6 className="card-subtitle mb-2">Current Participants:</h6>
         <ul className="list-group">
           {participants.map((participant, index) => (
