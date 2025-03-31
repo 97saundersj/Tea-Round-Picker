@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using TeaRoundPickerWebAPI.Data;
-using TeaRoundPickerWebAPI.DTOs;
 using TeaRoundPickerWebAPI.Models;
 using TeaRoundPickerWebAPI.Services.Interfaces;
 
@@ -23,40 +22,12 @@ namespace TeaRoundPickerWebAPI.Services
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public async Task UpdateTeam(int id, Team team)
+        public async Task<Team> CreateTeam(Team team)
         {
-            if (id != team.Id)
-            {
-                throw new ArgumentException("Team ID mismatch.");
-            }
-
-            _context.Entry(team).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TeamExists(id))
-                {
-                    throw new KeyNotFoundException("Team not found.");
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
-
-        public async Task<Team> CreateTeam(CreateTeamDto createTeamDto)
-        {
-            if (createTeamDto == null || string.IsNullOrWhiteSpace(createTeamDto.Label))
+            if (team == null || string.IsNullOrWhiteSpace(team.Label))
             {
                 throw new ArgumentException("Team name is required.");
             }
-
-            var team = new Team(createTeamDto.Label, []);
 
             _context.Teams.Add(team);
             try
@@ -81,18 +52,33 @@ namespace TeaRoundPickerWebAPI.Services
         public async Task DeleteTeam(int id)
         {
             var team = await _context.Teams.FindAsync(id);
-            if (team == null)
-            {
-                throw new KeyNotFoundException("Team not found.");
-            }
+            if (team == null) throw new KeyNotFoundException("Team not found.");
 
             _context.Teams.Remove(team);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddParticipant(int id, int participantId)
+        {
+            var team = await GetTeam(id);
+            if (team == null) throw new KeyNotFoundException("Team not found.");
+
+            var participant = await _context.Participants
+                .FirstOrDefaultAsync(p => p.Id == participantId);
+
+            if (participant == null) throw new KeyNotFoundException("Participant not found.");
+
+            var participantAlreadyAdded = team.Participants.Exists(p => p.Id == participantId);
+            if (participantAlreadyAdded) throw new InvalidOperationException("Participant Already Added.");
+
+            team.Participants.Add(participant);
             await _context.SaveChangesAsync();
         }
 
         public async Task RemoveParticipant(int teamId, int participantId)
         {
             var team = await GetTeam(teamId);
+            if (team == null) throw new KeyNotFoundException("Team not found.");
 
             var participant = team.Participants.FirstOrDefault(p => p.Id == participantId);
             if (participant != null)
@@ -102,18 +88,9 @@ namespace TeaRoundPickerWebAPI.Services
             }
         }
 
-        public async Task<IEnumerable<TeaRound>> GetTeaRounds(int teamId)
-        {
-            return await _context.TeaRounds
-                .Where(entry => entry.TeamId == teamId)
-                .Include(t => t.TeaOrders).ThenInclude(t => t.Participant)
-                .Include(t => t.ChosenParticipant)
-                .ToListAsync();
-        }
-
         private bool TeamExists(int id)
         {
             return _context.Teams.Any(e => e.Id == id);
         }
     }
-} 
+}

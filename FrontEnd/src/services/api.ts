@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Team, CreateTeamDto, TeaRound } from '../types/Types';
+import { Team, TeaRound, Participant } from '../types/Types';
 
 const API_URL = process.env.REACT_APP_WEB_API_URL;
 
@@ -14,7 +14,7 @@ export const api = {
     return response.data;
   },
 
-  createTeam: async (team: CreateTeamDto): Promise<Team> => {
+  createTeam: async (team: Team): Promise<Team> => {
     const response = await axios.post<Team>(`${API_URL}/teams`, team, {
       headers: {
         'Content-Type': 'application/json',
@@ -23,10 +23,40 @@ export const api = {
     return response.data;
   },
 
-  addParticipant: async (teamId: number, participantName: string): Promise<void> => {
+  getParticipantById: async (participantId: number): Promise<Participant> => {
+    const response = await axios.get<Participant>(`${API_URL}/participant/${participantId}`);
+    return response.data;
+  },
+
+  createParticipant: async (participant: Participant): Promise<Participant> => {
+    const response = await axios.post<Participant>(
+      `${API_URL}/participant`,
+      participant,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    return response.data;
+  },
+
+  addParticipantToTeam: async (teamId: number, participantName: string): Promise<void> => {
     await axios.post(
       `${API_URL}/participant/${teamId}`,
       participantName,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  },
+
+  addParticipantToTeamById: async (teamId: number, participantId: number): Promise<void> => {
+    await axios.post(
+      `${API_URL}/teams/${teamId}/participants/${participantId}`,
+      null,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -56,8 +86,8 @@ export const api = {
     return response.data;
   },
 
-  addTeaRound: async (teamId: number): Promise<string> => {
-    const response = await axios.post<string>(`${API_URL}/teaRounds/${teamId}`);
+  addTeaRound: async (teamId: number): Promise<number> => {
+    const response = await axios.post<number>(`${API_URL}/teaRounds/${teamId}`);
     return response.data;
   },
 }; 

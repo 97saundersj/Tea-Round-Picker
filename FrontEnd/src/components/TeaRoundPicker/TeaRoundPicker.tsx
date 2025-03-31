@@ -1,24 +1,30 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import TeaWheel from './TeaWheel';
 import TeamSelector from './TeamSelector';
 import ParticipantsList from './ParticipantsList';
 import TeaRoundsTable from './TeaRoundsTable';
 import { Team, Participant } from '../../types/Types';
 import { api } from '../../services/api';
+import { toast } from 'react-toastify';
 
 const TeaRoundPicker: React.FC = () => {
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [selectedTeamId, setSelectedTeamId] = useState<number | null>(null);
   const [teams, setTeams] = useState<Team[]>([]);
+  const [isLoadingTeams, setIsLoadingTeams] = useState<boolean>(false);
   const [refetchPreviousSelections, setRefetchPreviousSelections] = useState<boolean>(false);
 
   const fetchTeams = async (): Promise<void> => {
+    setIsLoadingTeams(true);
     try {
       const response = await api.getTeams();
       setTeams(response);
     } catch (error) {
       console.error('Error fetching teams:', error);
+      toast.error('Failed to fetch teams. Please try again.');
+    } finally {
+      setIsLoadingTeams(false);
     }
   };
 
@@ -26,23 +32,22 @@ const TeaRoundPicker: React.FC = () => {
     try {
       const response = await api.getTeamById(teamId);
       setParticipants(response.participants || []);
-      setSelectedTeamId(response.id);
+      if (response.id) {
+        setSelectedTeamId(response.id);
+      }
     } catch (error) {
       console.error('Error fetching team:', error);
+      toast.error('Failed to fetch team details. Please try again.');
     }
   };
 
   const handleTeamSelect = useCallback((team: Team | null): void => {
-    if (team) {
+    if (team?.id) {
       fetchTeamById(team.id);
     } else {
       setParticipants([]);
       setSelectedTeamId(null);
     }
-  }, []);
-
-  useEffect(() => {
-    fetchTeams();
   }, []);
 
   const pickedTeaMaker = (): void => {
@@ -63,7 +68,8 @@ const TeaRoundPicker: React.FC = () => {
       <TeamSelector 
         onTeamSelect={handleTeamSelect} 
         teams={teams} 
-        fetchTeams={fetchTeams} 
+        fetchTeams={fetchTeams}
+        isLoading={isLoadingTeams}
       />
       
       <ParticipantsList 

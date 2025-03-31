@@ -1,21 +1,21 @@
 import React, { useState, useCallback } from 'react';
 import CreatableSelect from 'react-select/creatable';
-import { Team, CreateTeamDto } from '../../types/Types';
+import { Team } from '../../types/Types';
 import { api } from '../../services/api';
+import { toast } from 'react-toastify';
 
-interface TeamSelectorProps {
+export interface TeamSelectorProps {
   onTeamSelect: (team: Team | null) => void;
   teams: Team[];
   fetchTeams: () => Promise<void>;
+  isLoading?: boolean;
 }
 
-const TeamSelector: React.FC<TeamSelectorProps> = ({ onTeamSelect, teams, fetchTeams }) => {
+const TeamSelector: React.FC<TeamSelectorProps> = ({ onTeamSelect, teams, fetchTeams, isLoading = false }) => {
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string>('');
 
   // Clear error messages on input change
   const handleInputChange = useCallback((newValue: string) => {
-    setErrorMessage('');
     return newValue;
   }, []);
 
@@ -23,28 +23,27 @@ const TeamSelector: React.FC<TeamSelectorProps> = ({ onTeamSelect, teams, fetchT
   // and automatically select the newly created team
   const handleCreate = useCallback(async (newValue: string) => {
     if (!newValue) {
-      setErrorMessage('Team name cannot be empty.');
+      toast.error('Team name cannot be empty.');
       return;
     }
 
     // Check for duplicates using label
     const teamExists = teams.some(team => team.label?.toLowerCase() === newValue.toLowerCase());
     if (teamExists) {
-      setErrorMessage('This team already exists.');
+      toast.error('This team already exists.');
       return;
     }
 
-    // Create a new team object
-    const newTeam: CreateTeamDto = { label: newValue };
+    const newTeam: Team = { label: newValue, participants: [] };
 
     try {
       const newCreatedTeam = await api.createTeam(newTeam);
-      await fetchTeams(); // Fetch the updated list of teams
-      setSelectedTeam(newCreatedTeam); // Update selectedTeam state
-      onTeamSelect(newCreatedTeam); // Automatically select the newly created team
+      await fetchTeams();
+      setSelectedTeam(newCreatedTeam);
+      onTeamSelect(newCreatedTeam);
     } catch (error) {
       console.error('Error creating team:', error);
-      setErrorMessage('Error creating team. Please try again.');
+      toast.error('Error creating team. Please try again.');
     }
   }, [teams, onTeamSelect, fetchTeams]);
 
@@ -54,6 +53,10 @@ const TeamSelector: React.FC<TeamSelectorProps> = ({ onTeamSelect, teams, fetchT
     onTeamSelect(newValue);
   }, [onTeamSelect]);
 
+  const handleMenuOpen = useCallback(() => {
+    fetchTeams();
+  }, [fetchTeams]);
+
   return (
     <div className="card m-2">
       <div className="card-body">
@@ -61,16 +64,17 @@ const TeamSelector: React.FC<TeamSelectorProps> = ({ onTeamSelect, teams, fetchT
         <CreatableSelect<Team>
           isClearable
           isSearchable
+          isLoading={isLoading}
           options={teams}
           value={selectedTeam}
           onChange={handleChange}
           onInputChange={handleInputChange}
           onCreateOption={handleCreate}
-          getOptionValue={(option) => option.id.toString()}
-          getOptionLabel={(option) => option.label || ''}
+          onMenuOpen={handleMenuOpen}
+          getOptionValue={(option) => option?.id?.toString() || ''}
+          getOptionLabel={(option) => option?.label || ''}
           placeholder="Enter a new team name or choose an existing one..."
         />
-        {errorMessage && <div className="text-danger mt-2">{errorMessage}</div>}
       </div>
     </div>
   );

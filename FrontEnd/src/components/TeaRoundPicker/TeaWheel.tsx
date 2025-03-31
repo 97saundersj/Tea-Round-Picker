@@ -4,6 +4,7 @@ import { Modal, Button, Alert } from 'react-bootstrap';
 import oilcanSvg from '../../images/oil-can.svg';
 import { Participant } from '../../types/Types';
 import { api } from '../../services/api';
+import { toast } from 'react-toastify';
 
 interface TeaWheelProps {
   participants: Participant[];
@@ -25,7 +26,7 @@ const TeaWheel: React.FC<TeaWheelProps> = ({
   pickedTeaMaker 
 }) => {
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
-  const [selectedParticipant, setSelectedParticipant] = useState<string | null>(null);
+  const [selectedParticipant, setSelectedParticipant] = useState<Participant | null>(null);
   const [modalVisible, setModalVisible] = useState<boolean>(showModal);
   const [prizeNumber, setPrizeNumber] = useState<number>(0);
   
@@ -39,17 +40,23 @@ const TeaWheel: React.FC<TeaWheelProps> = ({
     if (!teamId || participants.length === 0) return;
     
     try {
-      const participantName = await api.addTeaRound(teamId);
-      setSelectedParticipant(participantName);
+      const participantId = await api.addTeaRound(teamId);
+      const selectedParticipant = participants.find(p => p.id === participantId);
+
+      if (!selectedParticipant) throw new Error()
+
+      setSelectedParticipant(selectedParticipant);
       
-      const index = participants.findIndex(p => p.name === participantName);
-      setPrizeNumber(index !== -1 ? index : 0);
+      const index = participants.findIndex(p => p.id === participantId);
+      // Ensure index is valid before setting prize number
+      setPrizeNumber(index >= 0 ? index : 0);
       setModalVisible(true);
       
       // Small delay to ensure state is updated
       setTimeout(() => setIsSpinning(true), 50);
     } catch (error) {
       console.error("Error picking tea maker:", error);
+      toast.error("Error picking tea maker. Please try again.");
     }
   };
 
@@ -74,7 +81,7 @@ const TeaWheel: React.FC<TeaWheelProps> = ({
         <button
           className="btn btn-success btn-lg w-100 mb-3"
           onClick={pickTeaMaker}
-          disabled={isSpinning || participants.length === 0}
+          disabled={isSpinning || !participants || participants.length === 0}
         >
           Pick Tea Maker
         </button>
@@ -117,7 +124,7 @@ const TeaWheel: React.FC<TeaWheelProps> = ({
 
           {selectedParticipant && !isSpinning && (
             <Alert variant="success" className="text-center mt-3">
-              🎉 {selectedParticipant} will make the tea! 🎉
+              🎉 {selectedParticipant.name} will make the tea! 🎉
             </Alert>
           )}
 

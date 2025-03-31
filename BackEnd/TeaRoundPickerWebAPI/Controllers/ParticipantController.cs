@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TeaRoundPickerWebAPI.Models;
 using TeaRoundPickerWebAPI.Services.Interfaces;
 
 namespace TeaRoundPickerWebAPI.Controllers
@@ -9,32 +10,41 @@ namespace TeaRoundPickerWebAPI.Controllers
     {
         private readonly IParticipantService _participantService = participantService;
 
-        [HttpPost("{teamId}")]
-        public async Task<IActionResult> AddParticipant(int teamId, [FromBody] string participantName)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Participant>> GetParticipant(int id)
+        {
+            var participant = await _participantService.GetParticipant(id);
+            if (participant == null) return StatusCode(StatusCodes.Status500InternalServerError, "Error getting Participant.");
+
+            return Ok(participant);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Participant>> CreateParticipant([FromBody] Participant participant)
         {
             try
             {
-                await _participantService.AddParticipant(teamId, participantName);
-                return NoContent();
+                await _participantService.CreateParticipant(participant);
+                return CreatedAtAction("GetParticipant", new { id = participant.Id }, participant);
             }
-            catch (KeyNotFoundException)
+            catch (Exception)
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error creating Participant.");
             }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditParticipant(int id, [FromBody] string preferredTea)
+        public async Task<IActionResult> EditParticipant([FromBody] Participant participant)
         {
             try
             {
-                await _participantService.EditParticipant(id, preferredTea);
+                await _participantService.EditParticipant(participant);
                 return NoContent();
             }
-            catch (KeyNotFoundException)
+            catch (Exception)
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error editing Participant.");
             }
         }
     }
-} 
+}

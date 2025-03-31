@@ -1,13 +1,26 @@
-using System.Threading.Tasks;
+using TeaRoundPickerWebAPI.Models;
 
 namespace TeaRoundPickerWebAPI.Services.Interfaces
 {
     public interface IParticipantService
     {
-        Task AddParticipant(int teamId, string participantName);
+        /// <summary>
+        /// Gets a participant by their id.
+        /// </summary>
+        /// <param name="id">The participant's id.</param>
+        /// <returns>The participant if found; otherwise, null.</returns>
+        Task<Participant?> GetParticipant(int id);
 
-        Task<string> GetRandomParticipant(int teamId);
+        /// <summary>
+        /// Creates a new participant.
+        /// </summary>
+        /// <param name="participant">The participant details.</param>
+        Task CreateParticipant(Participant participant);
 
-        Task EditParticipant(int id, string preferredTea);
+        /// <summary>
+        /// Updates an existing participant's details.
+        /// </summary>
+        /// <param name="participant">The updated participant details.</param>
+        Task EditParticipant(Participant participant);
     }
-} 
+}

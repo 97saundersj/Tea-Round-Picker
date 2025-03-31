@@ -21,6 +21,7 @@ const ParticipantItem: React.FC<ParticipantItemProps> = ({
   };
 
   const handleBlur = (): void => {
+    if (!participant.id) return;
     handlePreferredTeaChange(participant.id, inputValue);
   };
 

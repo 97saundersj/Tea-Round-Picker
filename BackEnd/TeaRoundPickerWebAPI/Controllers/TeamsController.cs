@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TeaRoundPickerWebAPI.DTOs;
 using TeaRoundPickerWebAPI.Models;
 using TeaRoundPickerWebAPI.Services.Interfaces;
 
@@ -21,29 +20,38 @@ namespace TeaRoundPickerWebAPI.Controllers
         public async Task<ActionResult<Team>> GetTeam(int id)
         {
             var team = await _teamService.GetTeam(id);
-            if (team == null)
-            {
-                return NotFound();
-            }
+            if (team == null) return StatusCode(StatusCodes.Status500InternalServerError, "Error getting Team.");
+
             return Ok(team);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Team>> CreateTeam(CreateTeamDto createTeamDto)
+        public async Task<ActionResult<Team>> CreateTeam(Team team)
         {
             try
             {
-                var team = await _teamService.CreateTeam(createTeamDto);
-                return CreatedAtAction("GetTeam", new { id = team.Id }, team);
+                var createdTeam = await _teamService.CreateTeam(team);
+                return CreatedAtAction("GetTeam", new { id = createdTeam.Id }, createdTeam);
             }
-            catch (ArgumentException)
+            catch (Exception)
             {
-                return BadRequest("Team name is required.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error creating Team.");
             }
-            catch (InvalidOperationException)
+        }
+
+        [HttpPost("{teamId}/participants/{participantId}")]
+        public async Task<IActionResult> AddParticipant(int teamId, int participantId)
+        {
+            try
             {
-                return Conflict();
+                await _teamService.AddParticipant(teamId, participantId);
             }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error adding Participant.");
+            }
+
+            return NoContent();
         }
 
         [HttpDelete("{teamId}/{participantId}")]
@@ -54,9 +62,9 @@ namespace TeaRoundPickerWebAPI.Controllers
                 await _teamService.RemoveParticipant(teamId, participantId);
                 return NoContent();
             }
-            catch (KeyNotFoundException)
+            catch (Exception)
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error removing Participant.");
             }
         }
     }
