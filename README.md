@@ -9,8 +9,7 @@ This repository hosts the Back End and Front End code for a web application desi
 
 **Open the Solution in VS Code:**
 1. Launch VS Code.
-2. Open the solution file located in the `Frontend` directory.
-   ```
+2. Open the `Frontend` folder.
 
 **Install Dependencies:**
    Make sure you have [Node.js](https://nodejs.org/) installed. Then run:
@@ -32,6 +31,8 @@ This repository hosts the Back End and Front End code for a web application desi
    ```
 
 ## Backend [![Build & deploy Backend](https://github.com/97saundersj/Tea-Round-Picker/actions/workflows/buildTestDeploy-backend.yml/badge.svg)](https://github.com/97saundersj/Tea-Round-Picker/actions/workflows/buildTestDeploy-backend.yml)
+
+[Web API Swagger Page](https://tearoundpickerwebapi.azurewebsites.net/swagger)
 
 ### Running the Backend Project
 
