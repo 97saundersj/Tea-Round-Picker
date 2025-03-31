@@ -3,10 +3,11 @@
 ## Title: Technology Stack & Deployment for Nisien Tea Round Picker
 
 ### Context
-Nisien Tea Round Picker is a productivity tool designed to facilitate fair tea selection in an office setting. It will:
+Nisien Tea Round Picker is a productivity tool designed to facilitate fair selection for choosing who should make tea for their team in the office. It will:
 - Provide an intuitive interface for managing teams and participants.
 - Randomly select a tea maker to make tea for the team.
 - Record historical tea rounds and the tea orders made by participants.
+- Allow for mobile support, meaning that users can easily choose who should make tea from anywhere in the office.
 
 The application consists of two main components:
 - **Frontend:** A React web application with TypeScript.
@@ -30,6 +31,7 @@ The following technology stack and deployment approach have been chosen:
 #### **Frontend – React with TypeScript**
 - **React:** A popular library for building dynamic user interfaces with reusable components. I wanted to use React to gain experience with it, as it is a widely popular framework with extensive support available.
 - **TypeScript:** Provides static typing to improve code quality and reduce runtime errors.
+- **Styling:** I will be relying on Bootstrap for styling since it makes it easy to create a good-looking website with minimal effort and provides built-in mobile support.
 - **Past Experience:** I have no direct experience with React but I have experience with other reactivie javascript frameworks such as vue.js I wanted to use React to see how it compares to other frameworks and to gain experience with it.
 - **Key Benefits:** Promotes a modular architecture through the use of components, making it easy to quickly update and modify the project. It also speeds up development with a rich ecosystem of pre-made components and allows for easy integration with REST APIs.
 
