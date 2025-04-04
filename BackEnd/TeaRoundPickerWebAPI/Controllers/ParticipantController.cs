@@ -33,7 +33,7 @@ namespace TeaRoundPickerWebAPI.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> EditParticipant([FromBody] Participant participant)
         {
             try

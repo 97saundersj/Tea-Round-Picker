@@ -71,7 +71,7 @@ export const api = {
 
   updateParticipant: async (participant: Participant): Promise<void> => {
     await axios.put<Participant>(
-      `${API_URL}/participant/${participant.id}`,
+      `${API_URL}/participant`,
       participant,
       {
         headers: {
