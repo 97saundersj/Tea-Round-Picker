@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import { jest, describe, it, expect } from '@jest/globals';
 import App from '../src/App';
 
-jest.mock('../src/components/TeaRoundPicker/TeaRoundPicker', () => {
+jest.mock('../src/components/TeaRoundPicker/TeaRoundPickerPage', () => {
   return function DummyTeaRoundPicker() {
     return <div data-testid="mock-tea-round-picker">Tea Round Picker</div>;
   };
@@ -17,7 +17,7 @@ describe('App Component', () => {
     expect(container).toBeInTheDocument();
   });
 
-  it('renders TeaRoundPicker', () => {
+  it('renders TeaRoundPickerPage', () => {
     // Arrange
     render(<App />);
     
