@@ -111,7 +111,6 @@ const TeaWheel: React.FC<TeaWheelProps> = ({
                 style: {
                   transform: 'scaleX(-1) rotate(45deg)',
                   filter: 'drop-shadow(2px 2px 2px rgba(0,0,0,0.3))',
-                  transition: 'transform 0.2s ease-in-out',
                 },
               }}
             />
@@ -127,8 +126,7 @@ const TeaWheel: React.FC<TeaWheelProps> = ({
             {selectedParticipant && !isSpinning && (
               <Button
                 variant="primary"
-                onClick={pickTeaMaker}
-              >
+                onClick={pickTeaMaker}>
                 Spin Again?
               </Button>
             )}
