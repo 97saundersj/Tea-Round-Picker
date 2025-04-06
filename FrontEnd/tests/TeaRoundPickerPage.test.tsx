@@ -1,13 +1,10 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { jest, describe, it, expect, beforeEach } from '@jest/globals';
 import TeaRoundPickerPage from '../src/components/TeaRoundPicker/TeaRoundPickerPage';
 import userEvent from '@testing-library/user-event';
-
-// 👇 Import the real API type and also the mocked API
-import { api as realApi } from '../src/services/api'; // for typing
-import { api } from '../src/services/api'; // actual mock
+import { api } from '../src/services/api';
 
 jest.mock('../src/services/api', () => ({
   api: {
@@ -18,7 +15,7 @@ jest.mock('../src/services/api', () => ({
 }));
 
 // 👇 Cast the mocked version of `api`
-const mockedApi = api as jest.Mocked<typeof realApi>;
+const mockedApi = api as jest.Mocked<typeof api>;
 
 describe('TeaRoundPickerPage Component', () => {
   beforeEach(() => {
