@@ -57,10 +57,11 @@ const TeamSelector: React.FC<TeamSelectorProps> = ({ onTeamSelect }) => {
   };
 
   return (
-    <div className="card m-2">
+    <div data-testid="team-selector" className="card m-2">
       <div className="card-body">
         <h5 className="card-title">Team</h5>
         <CreatableSelect<Team>
+          data-testid="team-selector-input"
           isClearable
           isSearchable
           isLoading={isLoadingTeams}
