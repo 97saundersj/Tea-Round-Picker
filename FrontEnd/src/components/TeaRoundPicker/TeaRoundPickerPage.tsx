@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import TeaWheel from './TeaWheel';
 import TeamSelector from './TeamSelector';
 import ParticipantsList from './ParticipantsList';
@@ -7,26 +7,10 @@ import { Team, Participant } from '../../types/Types';
 import { api } from '../../services/api';
 import { toast } from 'react-toastify';
 
-const TeaRoundPicker: React.FC = () => {
+const TeaRoundPickerPage: React.FC = () => {
   const [participants, setParticipants] = useState<Participant[]>([]);
-  const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [selectedTeamId, setSelectedTeamId] = useState<number | null>(null);
-  const [teams, setTeams] = useState<Team[]>([]);
-  const [isLoadingTeams, setIsLoadingTeams] = useState<boolean>(false);
   const [refetchPreviousSelections, setRefetchPreviousSelections] = useState<boolean>(false);
-
-  const fetchTeams = async (): Promise<void> => {
-    setIsLoadingTeams(true);
-    try {
-      const response = await api.getTeams();
-      setTeams(response);
-    } catch (error) {
-      console.error('Error fetching teams:', error);
-      toast.error('Failed to fetch teams. Please try again.');
-    } finally {
-      setIsLoadingTeams(false);
-    }
-  };
 
   const fetchTeamById = async (teamId: number): Promise<void> => {
     try {
@@ -41,14 +25,14 @@ const TeaRoundPicker: React.FC = () => {
     }
   };
 
-  const handleTeamSelect = useCallback((team: Team | null): void => {
+  const handleTeamSelect = (team: Team | null): void => {
     if (team?.id) {
       fetchTeamById(team.id);
     } else {
       setParticipants([]);
       setSelectedTeamId(null);
     }
-  }, []);
+  };
 
   const pickedTeaMaker = (): void => {
     setRefetchPreviousSelections(prev => !prev);
@@ -63,35 +47,30 @@ const TeaRoundPicker: React.FC = () => {
   return (
     <div className="container">
       <h1 className="mb-4">Tea Round Picker</h1>
-      
-      <TeamSelector 
-        onTeamSelect={handleTeamSelect} 
-        teams={teams} 
-        fetchTeams={fetchTeams}
-        isLoading={isLoadingTeams}
+
+      <TeamSelector
+        onTeamSelect={handleTeamSelect}
       />
-      
-      <ParticipantsList 
-        participants={participants} 
-        setParticipants={setParticipants} 
-        teamId={selectedTeamId} 
-        onParticipantAdded={refetchTeam} 
-      />
-      
-      <TeaWheel
-        participants={participants}
+
+      <ParticipantsList
         teamId={selectedTeamId}
-        showModal={isSpinning}
-        onClose={() => setIsSpinning(false)}
+        participants={participants}
+        setParticipants={setParticipants}
+        onParticipantAdded={refetchTeam}
+      />
+
+      <TeaWheel
+        teamId={selectedTeamId}
+        participants={participants}
         pickedTeaMaker={pickedTeaMaker}
       />
-      
-      <TeaRoundsTable 
-        teamId={selectedTeamId} 
-        refresh={refetchPreviousSelections} 
+
+      <TeaRoundsTable
+        teamId={selectedTeamId}
+        refresh={refetchPreviousSelections}
       />
     </div>
   );
 };
 
-export default TeaRoundPicker; 
+export default TeaRoundPickerPage;

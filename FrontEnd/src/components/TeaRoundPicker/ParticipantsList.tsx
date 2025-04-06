@@ -5,23 +5,23 @@ import { api } from '../../services/api';
 import { toast } from 'react-toastify';
 
 interface ParticipantsListProps {
+  teamId: number | null;
   participants: Participant[];
   setParticipants: React.Dispatch<React.SetStateAction<Participant[]>>;
-  teamId: number | null;
   onParticipantAdded: () => void;
 }
 
-const ParticipantsList: React.FC<ParticipantsListProps> = ({ 
-  participants, 
-  setParticipants, 
-  teamId, 
-  onParticipantAdded 
+const ParticipantsList: React.FC<ParticipantsListProps> = ({
+  teamId,
+  participants,
+  setParticipants,
+  onParticipantAdded
 }) => {
   const [newParticipant, setNewParticipant] = useState<string>('');
 
   const addParticipantToAPI = async (participantName: string): Promise<void> => {
     if (!teamId) return;
-    
+
     var participant: Participant = {
       id: 0,
       name: participantName,
@@ -42,7 +42,7 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
   const handleAddParticipant = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     const trimmedName = newParticipant.trim();
-    
+
     if (trimmedName && !participants.some(p => p.name === trimmedName)) {
       await addParticipantToAPI(trimmedName);
 
@@ -60,7 +60,7 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
 
   const handleRemoveParticipant = async (index: number): Promise<void> => {
     if (!teamId) return;
-    
+
     const participantToRemove = participants[index];
     if (!participantToRemove || !participantToRemove.id) return;
 
@@ -76,25 +76,25 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
   const handlePreferredTeaChange = async (id: number | null | undefined, newTea: string): Promise<void> => {
     try {
       if (!id) throw new Error("Participant invalid");
-  
+
       // Fetch the participant to update
       const participantToUpdate = participants.find(participant => participant.id === id);
       if (!participantToUpdate) throw new Error("Participant not found");
-  
+
       // Update the preferredTea property
       const updatedParticipant = { ...participantToUpdate, preferredTea: newTea };
-  
+
       await api.updateParticipant(updatedParticipant); // Pass the entire participant object
-  
+
       setParticipants(participants.map((participant) =>
         participant.id === id ? updatedParticipant : participant
       ));
-  
+
     } catch (error) {
       console.error("Error updating preferred tea:", error);
       toast.error('Error updating preferred tea. Please try again.');
     }
-  }; 
+  };
 
   if (!teamId) {
     return null;

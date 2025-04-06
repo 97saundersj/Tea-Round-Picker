@@ -9,8 +9,6 @@ import { toast } from 'react-toastify';
 interface TeaWheelProps {
   participants: Participant[];
   teamId: number | null;
-  showModal: boolean;
-  onClose: () => void;
   pickedTeaMaker: () => void;
 }
 
@@ -18,27 +16,25 @@ interface WheelData {
   option: string;
 }
 
-const TeaWheel: React.FC<TeaWheelProps> = ({ 
-  participants = [], 
-  teamId, 
-  showModal, 
-  onClose, 
-  pickedTeaMaker 
+const TeaWheel: React.FC<TeaWheelProps> = ({
+  participants = [],
+  teamId,
+  pickedTeaMaker
 }) => {
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [selectedParticipant, setSelectedParticipant] = useState<Participant | null>(null);
-  const [modalVisible, setModalVisible] = useState<boolean>(showModal);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [prizeNumber, setPrizeNumber] = useState<number>(0);
-  
+
   // Create wheel data from participants
-  const wheelData: WheelData[] = participants.length > 0 
+  const wheelData: WheelData[] = participants.length > 0
     ? participants.map(p => ({ option: p.name || 'Unknown' }))
     : [{ option: 'No participants' }];
 
   // Pick random tea maker
   const pickTeaMaker = async (): Promise<void> => {
     if (!teamId || participants.length === 0) return;
-    
+
     try {
       const participantId = await api.addTeaRound(teamId);
       const selectedParticipant = participants.find(p => p.id === participantId);
@@ -46,12 +42,12 @@ const TeaWheel: React.FC<TeaWheelProps> = ({
       if (!selectedParticipant) throw new Error()
 
       setSelectedParticipant(selectedParticipant);
-      
+
       const index = participants.findIndex(p => p.id === participantId);
       // Ensure index is valid before setting prize number
       setPrizeNumber(index >= 0 ? index : 0);
       setModalVisible(true);
-      
+
       // Small delay to ensure state is updated
       setTimeout(() => setIsSpinning(true), 50);
     } catch (error) {
@@ -69,7 +65,6 @@ const TeaWheel: React.FC<TeaWheelProps> = ({
   const handleClose = (): void => {
     setIsSpinning(false);
     setModalVisible(false);
-    onClose();
   };
 
   if (!teamId) return null;
@@ -86,7 +81,7 @@ const TeaWheel: React.FC<TeaWheelProps> = ({
           Pick Tea Maker
         </button>
       </div>
-    
+
       <Modal show={modalVisible} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>Tea Wheel</Modal.Title>
@@ -130,8 +125,8 @@ const TeaWheel: React.FC<TeaWheelProps> = ({
 
           <Modal.Footer>
             {selectedParticipant && !isSpinning && (
-              <Button 
-                variant="primary" 
+              <Button
+                variant="primary"
                 onClick={pickTeaMaker}
               >
                 Spin Again?

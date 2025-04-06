@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // Import components
 import Navbar from './components/Navbar';
 import About from './components/About';
-import TeaRoundPicker from './components/TeaRoundPicker/TeaRoundPicker';
+import TeaRoundPickerPage from './components/TeaRoundPicker/TeaRoundPickerPage';
 
 const App: React.FC = () => {
   return (
@@ -16,7 +16,7 @@ const App: React.FC = () => {
       <div data-testid="app-container">
         <Navbar />
         <Routes>
-          <Route path="/" element={<TeaRoundPicker />} />
+          <Route path="/" element={<TeaRoundPickerPage />} />
           <Route path="/about" element={<About />} />
         </Routes>
         <ToastContainer position="top-right" />
