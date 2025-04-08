@@ -101,7 +101,7 @@ const ParticipantsList: React.FC<ParticipantsListProps> = ({
   }
 
   return (
-    <div className="card m-2">
+    <div data-testid="participants-list" className="card m-2">
       <div className="card-body">
         <h5 className="card-title">Participants</h5>
         <form onSubmit={handleAddParticipant} className="mb-3">
