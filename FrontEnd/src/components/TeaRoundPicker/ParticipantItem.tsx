@@ -26,7 +26,7 @@ const ParticipantItem: React.FC<ParticipantItemProps> = ({
   };
 
   return (
-    <li className="list-group-item">
+    <li data-testid={`participant-item-${participant.id}`} className="list-group-item">
       <div className="row align-items-center">
         <div className="col-3">
           <span>{participant.name}</span>
